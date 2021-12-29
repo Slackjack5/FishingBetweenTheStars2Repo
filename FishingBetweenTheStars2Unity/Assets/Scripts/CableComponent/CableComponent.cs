@@ -147,7 +147,6 @@ public class CableComponent : MonoBehaviour
 		for (int iterationIdx = 0; iterationIdx < solverIterations; iterationIdx++) 
 		{
 			SolveDistanceConstraint();
-			SolveStiffnessConstraint();
 		}
 	}
 
@@ -199,35 +198,6 @@ public class CableComponent : MonoBehaviour
 		{
 			particleB.Position -= errorFactor * delta;
 		}
-	}
-
-	/**
-	 * Stiffness constraint
-	 **/
-	void SolveStiffnessConstraint()
-	{
-		float distance = (points[0].Position - points[segments].Position).magnitude;
-		if (distance > cableLength) 
-		{
-			foreach (CableParticle particle in points) 
-			{
-				SolveStiffnessConstraint(particle, distance);
-			}
-		}	
-	}
-
-	/**
-	 * TODO: I'll implement this constraint to reinforce cable stiffness 
-	 * 
-	 * As the system has more particles, the verlet integration aproach 
-	 * may get way too loose cable simulation. This constraint is intended 
-	 * to reinforce the cable stiffness.
-	 * // throw new System.NotImplementedException ();
-	 **/
-	void SolveStiffnessConstraint(CableParticle cableParticle, float distance)
-	{
-	
-
 	}
 
 	#endregion
