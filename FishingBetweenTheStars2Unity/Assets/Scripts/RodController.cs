@@ -14,6 +14,8 @@ public class RodController : UdonSharpBehaviour
     }
     void OnDrop()
     {
-        lineController.CastLine();
+        if(!lineController.GetCast()) {
+            lineController.CastLine();
+        }
     }
 }
