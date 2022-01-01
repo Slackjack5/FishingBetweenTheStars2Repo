@@ -29,6 +29,8 @@ public class LineController : UdonSharpBehaviour
     public float maxTimeToReelPerUnit;
     [Tooltip("What percentage of reeling to start moving the hook upwards towards the rod")]
     public float percentageToReelUpward;
+    [Tooltip("Multiplier on the launch force of the hook when casting the line")]
+    public float launchForceMultiplier;
     void Start()
     {
         lineRenderer = gameObject.GetComponent<LineRenderer>();
@@ -86,7 +88,7 @@ public class LineController : UdonSharpBehaviour
     {
         castPosition = transform.position;
         hookRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        hookRigidbody.AddForce(predictedVelocity);
+        hookRigidbody.AddForce(predictedVelocity * launchForceMultiplier);
         hookParent = hook.transform.parent.gameObject; // store the parent for later when we want to reattach the hook
         hook.transform.SetParent(null); // we don't want the hook to move with respect to the rod anymore
         lineRenderer.forceRenderingOff = false;
