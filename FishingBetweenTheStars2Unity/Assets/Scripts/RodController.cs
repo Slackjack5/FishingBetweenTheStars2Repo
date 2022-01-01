@@ -12,7 +12,8 @@ public class RodController : UdonSharpBehaviour
     {
         lineController = line.GetComponent<LineController>();
     }
-    void OnPickupUseUp()
+
+    public override void OnPickupUseUp()
     {
         if(!lineController.GetCast()) {
             lineController.CastLine();
