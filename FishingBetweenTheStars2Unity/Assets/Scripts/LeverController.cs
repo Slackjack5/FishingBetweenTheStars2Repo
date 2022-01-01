@@ -13,6 +13,8 @@ public class LeverController : UdonSharpBehaviour
     private HingeJoint leverHinge;
     private float initialDrag;
     private bool isHeld;
+    private bool isReeling;
+    public float reelingThreshold; // speed threshold to determine if they are reeling or not
     void Start() 
     {
         leverReference = gameObject.transform.parent.GetChild(1).gameObject;
@@ -21,6 +23,7 @@ public class LeverController : UdonSharpBehaviour
         initialDrag = lever.angularDrag;
         leverHandle = gameObject.transform.GetChild(0).gameObject;
         handleController = gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject; // get the second child
+        isReeling = false;
     }
 
     void FixedUpdate()
@@ -33,6 +36,14 @@ public class LeverController : UdonSharpBehaviour
             JointSpring spring = leverHinge.spring;
             spring.targetPosition = angle;
             leverHinge.spring = spring;
+            if(leverHinge.currentTorque.magnitude > reelingThreshold) 
+            {
+                isReeling = true;
+            }
+            else
+            {
+                isReeling = false;
+            }
         }
     }
 
@@ -46,6 +57,24 @@ public class LeverController : UdonSharpBehaviour
 
     public void SetHeld(bool held)
     {
+        if(held)
+        {
+            leverHinge.useSpring = true;
+        }
+        else
+        {
+            leverHinge.useSpring = false;
+        }
         isHeld = held;
+    }
+
+    public bool GetReeling()
+    {
+        return isReeling;
+    }
+
+    public float GetReelForce()
+    {
+        return leverHinge.currentTorque.magnitude/reelingThreshold;
     }
 }

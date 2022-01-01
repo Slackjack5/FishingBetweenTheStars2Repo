@@ -18,26 +18,29 @@ public class LineController : UdonSharpBehaviour
     private bool isCast;
     private bool inWater; // if the hook is in the water
     private float reelTime; // remaining time left to reel in
+    private float totalReelTime; // total time to reel once the rod has been cast
+    private LeverController leverController; // data from the lever of the rod
     [Header("Linked GameObjects")]
     public GameObject hook;
     [Header("Line Attributes")]
     [Tooltip("Max distance the player can move the rod from original cast position before the line breaks")]
     public float maxDistanceFromCast;
-    [Tooltip("Time it takes for the hook to reel in once it is fully cast")]
-    public float maxTimeToReel;
+    [Tooltip("Time it takes for the hook to reel one unit in once it is fully cast when reeling at minimum speed")]
+    public float maxTimeToReelPerUnit;
     [Tooltip("What percentage of reeling to start moving the hook upwards towards the rod")]
     public float percentageToReelUpward;
     void Start()
     {
         lineRenderer = gameObject.GetComponent<LineRenderer>();
         hookRigidbody = hook.GetComponent<Rigidbody>();
+        leverController = gameObject.transform.parent.parent.GetChild(2).GetComponent<LeverController>();
         lineRenderer.forceRenderingOff = true;
         prevVelocities = new Vector3[10];
         prevPosition = transform.position;
         prevVelCount = 0;
         isCast = false;
         inWater = false;
-        reelTime = maxTimeToReel;
+        reelTime = 0;
     }
 
     void FixedUpdate()
@@ -73,7 +76,7 @@ public class LineController : UdonSharpBehaviour
         {
             ResetLine();
         }
-        else if(inWater)
+        else if(inWater && leverController.GetReeling())
         {
             ReelLine();
         }
@@ -92,11 +95,12 @@ public class LineController : UdonSharpBehaviour
 
     public void ReelLine()
     {
-        float percentageToReel = Time.fixedDeltaTime / reelTime;
-        reelTime -= Time.fixedDeltaTime;
+        float reelPerTick = leverController.GetReelForce()*Time.fixedDeltaTime;
+        float percentageToReel = reelPerTick / reelTime;
+        reelTime -= reelPerTick;
         Vector3 distToRod = hook.transform.position - transform.position;
         Vector3 xzDistToRod = new Vector3(distToRod.x, 0, distToRod.z); // only get xz distance since we don't want the hook to move vertically as it is reeled in until the end
-        if(reelTime / maxTimeToReel < percentageToReelUpward) // if less than 10% of the time is remaining to reel, start reeling vertically
+        if(reelTime / totalReelTime < percentageToReelUpward) // if less than 10% of the time is remaining to reel, start reeling vertically
         {
             hook.transform.SetPositionAndRotation(hook.transform.position - distToRod*percentageToReel, hook.transform.rotation);
         }
@@ -119,7 +123,6 @@ public class LineController : UdonSharpBehaviour
         hook.transform.SetPositionAndRotation(transform.position, transform.rotation);
         isCast = false;
         inWater = false;
-        reelTime = maxTimeToReel;
     }
 
     public void SetCast(bool cast)
@@ -134,6 +137,9 @@ public class LineController : UdonSharpBehaviour
 
     public void SetInWater(bool water)
     {
+        reelTime = maxTimeToReelPerUnit * Vector3.Distance(transform.position, hook.transform.position);
+        totalReelTime = reelTime;
+        Debug.Log(Vector3.Distance(transform.position, hook.transform.position));
         inWater = water;
     }
 }
