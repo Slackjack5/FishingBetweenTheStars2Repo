@@ -35776,6 +35776,7 @@ GameObject:
   - component: {fileID: 1121958879}
   - component: {fileID: 1121958878}
   - component: {fileID: 1121958877}
+  - component: {fileID: 1121958880}
   m_Layer: 0
   m_Name: createRod
   m_TagString: Untagged
@@ -35894,6 +35895,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121958875}
   m_CullTransparentMesh: 0
+--- !u!114 &1121958880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121958875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1533785930, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1190390711
 GameObject:
   m_ObjectHideFlags: 0
@@ -41258,24 +41271,14 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 9e1c9fc33a6d22a4e9ff442993fa86a7, type: 2}
   - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: 1bb0388d680a9c547b76f44d3074a76f, type: 2}
-  - {fileID: 2100000, guid: 22fca4285d6255a40b410cfa183d978e, type: 2}
-  - {fileID: 2100000, guid: 3bad6697baffff64d9db1cfa61501af2, type: 2}
-  - {fileID: 2100000, guid: c4b1b2f86f8628e47a191cd5f6d22097, type: 2}
-  - {fileID: 2100000, guid: 645eee2d372959747865f1f07ba55234, type: 2}
-  - {fileID: 2100000, guid: 66e8598508307ab44866622f0f04c930, type: 2}
+  - {fileID: 2100000, guid: 8dd0a2bc70b05584a9b5cc6b47d6a9a6, type: 2}
   - {fileID: 2100000, guid: 18203ccf97c23dd4c9534527b57d6eb4, type: 2}
   - {fileID: 2100000, guid: 7c1e2aa1955f1eb408d6a0bb1853497c, type: 2}
+  - {fileID: 2100000, guid: 22fca4285d6255a40b410cfa183d978e, type: 2}
+  - {fileID: 2100000, guid: 645eee2d372959747865f1f07ba55234, type: 2}
+  - {fileID: 2100000, guid: 66e8598508307ab44866622f0f04c930, type: 2}
+  - {fileID: 2100000, guid: 3bad6697baffff64d9db1cfa61501af2, type: 2}
   - {fileID: 2100000, guid: 66accd5b012fdd840a2847526d5420b9, type: 2}
-  - {fileID: 2100000, guid: 066cae987b2ac074693896a1597dcdea, type: 2}
-  - {fileID: 2100000, guid: 8dd0a2bc70b05584a9b5cc6b47d6a9a6, type: 2}
-  - {fileID: 2100000, guid: d860b44eec94f0546af3beffa0170a34, type: 2}
-  - {fileID: 2100000, guid: 3d815a747bad2ed44bff2913803cd80d, type: 2}
-  - {fileID: 2100000, guid: 1518f9975f387a74da13856547aee380, type: 2}
-  - {fileID: 2100000, guid: 3b09145da66d8b142b3a82a992c9038e, type: 2}
-  - {fileID: 2100000, guid: 3e1d0bf6e086a4f4582ea29e4b54b3c2, type: 2}
-  - {fileID: 2100000, guid: 771fb58cffc42874ea27e95691228f6a, type: 2}
-  - {fileID: 2100000, guid: 63e0104889793e64984943d420a66c1e, type: 2}
-  - {fileID: 2100000, guid: 85e89a1d34ef38b49b6838abc75df050, type: 2}
   LightMapsNear: []
   LightMapsFar: []
   LightMode: 0
