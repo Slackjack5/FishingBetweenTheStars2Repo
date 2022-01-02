@@ -8,6 +8,7 @@ public class RodController : UdonSharpBehaviour
 {
     public GameObject line;
     private LineController lineController;
+    private VelocityEstimator velocityEstimator;
     void Start()
     {
         lineController = line.GetComponent<LineController>();

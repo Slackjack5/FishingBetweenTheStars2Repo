@@ -6,24 +6,27 @@ using VRC.Udon;
 
 public class LeverController : UdonSharpBehaviour
 {
-    private GameObject handleController;
-    private GameObject leverHandle;
-    private GameObject leverReference;
     private Rigidbody lever;
     private HingeJoint leverHinge;
+    private float angularVelocity;
+    private float previousAngle;
     private float initialDrag;
     private bool isHeld;
     private bool isReeling;
+    [Header("External GameObjects")]
+    public GameObject handleController;
+    public GameObject leverHandle;
+    public GameObject leverReference;
+    public GameObject rodController;
+    [Header("Lever variables")]
     public float reelingThreshold; // speed threshold to determine if they are reeling or not
     void Start() 
     {
-        leverReference = gameObject.transform.parent.GetChild(1).gameObject;
-        lever = gameObject.GetComponent<Rigidbody>();
-        leverHinge = gameObject.GetComponent<HingeJoint>();
+        lever = GetComponent<Rigidbody>();
+        leverHinge = GetComponent<HingeJoint>();
         initialDrag = lever.angularDrag;
-        leverHandle = gameObject.transform.GetChild(0).gameObject;
-        handleController = gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject; // get the second child
         isReeling = false;
+        previousAngle = 0;
     }
 
     void FixedUpdate()
@@ -36,22 +39,16 @@ public class LeverController : UdonSharpBehaviour
             JointSpring spring = leverHinge.spring;
             spring.targetPosition = angle;
             leverHinge.spring = spring;
-            if(leverHinge.currentTorque.magnitude > reelingThreshold) 
-            {
-                isReeling = true;
-            }
-            else
-            {
-                isReeling = false;
-            }
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        if(leverHandle != null) {
-            Gizmos.DrawSphere(leverHandle.transform.position, 1f);
-            Gizmos.DrawSphere(handleController.transform.position, 1f);
+        angularVelocity = leverHinge.angle - previousAngle;
+        previousAngle = leverHinge.angle;
+        if(angularVelocity > reelingThreshold) 
+        {
+            isReeling = true;
+        }
+        else
+        {
+            isReeling = false;
         }
     }
 
@@ -71,10 +68,5 @@ public class LeverController : UdonSharpBehaviour
     public bool GetReeling()
     {
         return isReeling;
-    }
-
-    public float GetReelForce()
-    {
-        return leverHinge.currentTorque.magnitude/reelingThreshold;
     }
 }

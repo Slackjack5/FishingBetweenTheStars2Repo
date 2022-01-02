@@ -9,16 +9,13 @@ public class LineController : UdonSharpBehaviour
 {
     private LineRenderer lineRenderer;
     private Rigidbody hookRigidbody;
-    private Vector3 predictedVelocity;
-    private Vector3 prevPosition; // previous position the hook was at to do casting velocity calculations
     private Vector3 castPosition; // position at which the hook was cast from (to make sure player doesn't run too far away from where they cast)
-    private Vector3[] prevVelocities;
     private GameObject hookParent;
-    private int prevVelCount;
     private bool isCast;
     private bool inWater; // if the hook is in the water
     private float reelTime; // remaining time left to reel in
     private float totalReelTime; // total time to reel once the rod has been cast
+    private VelocityEstimator velocityEstimator;
     private LeverController leverController; // data from the lever of the rod
     [Header("Linked GameObjects")]
     public GameObject hook;
@@ -37,50 +34,21 @@ public class LineController : UdonSharpBehaviour
         hookRigidbody = hook.GetComponent<Rigidbody>();
         leverController = gameObject.transform.parent.parent.GetChild(2).GetComponent<LeverController>();
         lineRenderer.forceRenderingOff = true;
-        prevVelocities = new Vector3[10];
-        prevPosition = transform.position;
-        prevVelCount = 0;
         isCast = false;
         inWater = false;
         reelTime = 0;
+        velocityEstimator = GetComponent<VelocityEstimator>();
     }
 
     void FixedUpdate()
     {
-        if(!isCast) {
-            if(prevVelCount < 9) 
-            {
-                prevVelocities[prevVelCount] = (transform.position - prevPosition);
-                prevVelCount++;
-            }
-            else
-            {
-                Vector3 temp;
-                temp = prevVelocities[prevVelocities.Length - 2];
-                prevVelocities[prevVelocities.Length - 2] = prevVelocities[prevVelocities.Length - 1];
-                for(int i = prevVelocities.Length - 2; i >= 1; i--) 
-                {
-                    Vector3 temp2 = prevVelocities[i - 1];
-                    prevVelocities[i - 1] = temp;
-                    temp = temp2;
-                }
-                prevVelocities[prevVelocities.Length - 1] = transform.position - prevPosition;
-            }
-            Vector3 sum = new Vector3();
-            for(int i = 0; i < prevVelCount; i++)
-            {
-                sum += prevVelocities[i];
-            }
-            predictedVelocity = sum / (float)prevVelCount;
-            prevPosition = transform.position;
-        }
-        else if(Vector3.Distance(transform.position, castPosition) > maxDistanceFromCast)
+        if(Vector3.Distance(transform.position, castPosition) > maxDistanceFromCast)
         {
             ResetLine();
         }
         else if(inWater && leverController.GetReeling())
         {
-            ReelLine();
+            //ReelLine();
         }
     }
 
@@ -88,7 +56,7 @@ public class LineController : UdonSharpBehaviour
     {
         castPosition = transform.position;
         hookRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        hookRigidbody.AddForce(predictedVelocity * launchForceMultiplier);
+        hookRigidbody.AddForce(velocityEstimator.GetPredictedVelocity() * launchForceMultiplier);
         hookParent = hook.transform.parent.gameObject; // store the parent for later when we want to reattach the hook
         hook.transform.SetParent(null); // we don't want the hook to move with respect to the rod anymore
         lineRenderer.forceRenderingOff = false;
@@ -97,7 +65,8 @@ public class LineController : UdonSharpBehaviour
 
     public void ReelLine()
     {
-        float reelPerTick = leverController.GetReelForce()*Time.fixedDeltaTime;
+        // add in some multiplier to reelPerTick that gets data from the fishing minigame
+        float reelPerTick = Time.fixedDeltaTime;
         float percentageToReel = reelPerTick / reelTime;
         reelTime -= reelPerTick;
         Vector3 distToRod = hook.transform.position - transform.position;
@@ -118,7 +87,6 @@ public class LineController : UdonSharpBehaviour
 
     public void ResetLine()
     {
-        prevVelCount = 0;
         hookRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         lineRenderer.forceRenderingOff = true;
         hook.transform.SetParent(hookParent.transform);
@@ -136,12 +104,21 @@ public class LineController : UdonSharpBehaviour
     {
         return isCast;
     }
+    
+    public bool GetWater()
+    {
+        return inWater;
+    }
+
+    public bool GetReeling()
+    {
+        return leverController.GetReeling();
+    }
 
     public void SetInWater(bool water)
     {
         reelTime = maxTimeToReelPerUnit * Vector3.Distance(transform.position, hook.transform.position);
         totalReelTime = reelTime;
-        Debug.Log(Vector3.Distance(transform.position, hook.transform.position));
         inWater = water;
     }
 }
