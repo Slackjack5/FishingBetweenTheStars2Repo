@@ -37,6 +37,7 @@ public class FishingGameController : UdonSharpBehaviour
     private LineController line; // getting data from the fishing rod
     private const float boardSize = 200; // how big the board is
     private float bounds; // the size of the bounds of the player, determined by boardSize, UIboardSize, and playerUI size
+    private int gameTicks; // how many game ticks have happened
 
     float gameToUICoords(float gameCoords)
     {
@@ -56,6 +57,7 @@ public class FishingGameController : UdonSharpBehaviour
         player.SetPosition(bounds);
         line = linePrefab.GetComponent<LineController>();
         canvas.SetActive(false);
+        gameTicks = 0;
     }
 
     void FixedUpdate()
@@ -68,6 +70,7 @@ public class FishingGameController : UdonSharpBehaviour
             }
             fish.Move(boardSize, bounds);
             player.Move(boardSize, bounds, line.GetReeling());
+            gameTicks++;
             if(Mathf.Abs(fish.GetPosition() - player.GetPosition()) < bounds)
             {
                 fish.AddCaught();
@@ -91,6 +94,11 @@ public class FishingGameController : UdonSharpBehaviour
         playerUI.anchoredPosition3D = playerPos;
 
         progressUI.value = fish.GetCaught();
+    }
+
+    public int GetGameTicks()
+    {
+        return gameTicks;
     }
 
 }

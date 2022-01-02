@@ -20,6 +20,8 @@ public class SettingsPanelController : UdonSharpBehaviour
     public Text bounceText;
     public Slider boundAdjustmentSlider;
     public Text boundAdjustmentText;
+    public Text fixedUpdateRate;
+    public Text fishGameTicks;
     [Header("Required prefabs")]
     public GameObject fishingRod;
     public GameObject currentFishingRod;
@@ -32,6 +34,11 @@ public class SettingsPanelController : UdonSharpBehaviour
         gravityText.text = ""+gravitySlider.value;
         bounceText.text = ""+bounceSlider.value;
         boundAdjustmentText.text = ""+boundAdjustmentSlider.value;
+        if(fishingGameController != null) 
+        {
+            fishGameTicks.text = ""+fishingGameController.GetGameTicks();
+            fixedUpdateRate.text = ""+Time.fixedDeltaTime;
+        }
     }
 
     // overriding onpickup because buttons are really stupid
