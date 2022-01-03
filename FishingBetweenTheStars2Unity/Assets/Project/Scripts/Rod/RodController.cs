@@ -6,12 +6,26 @@ using VRC.Udon;
 
 public class RodController : UdonSharpBehaviour
 {
-    public GameObject line;
     private LineController lineController;
-    private VelocityEstimator velocityEstimator;
+    private FishingGameController fishingGameController;
+    [UdonSynced] private bool isActive;
     void Start()
     {
-        lineController = line.GetComponent<LineController>();
+        lineController = GetComponentInChildren<LineController>();
+        fishingGameController = GetComponentInChildren<FishingGameController>();
+    }
+
+    public void Reset()
+    {
+        SetRodActive(false);
+        lineController.ResetLine();
+        fishingGameController.Start();
+    }
+
+    public void SetRodActive(bool active)
+    {
+        isActive = active;
+        gameObject.SetActive(isActive);
     }
 
     public override void OnPickupUseUp()
@@ -19,5 +33,10 @@ public class RodController : UdonSharpBehaviour
         if(!lineController.GetCast()) {
             lineController.CastLine();
         }
+    }
+
+    public override void OnDeserialization()
+    {
+        gameObject.SetActive(isActive);
     }
 }

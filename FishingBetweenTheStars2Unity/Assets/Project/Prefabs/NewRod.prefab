@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 4870205336637744536}
   - component: {fileID: 4870205336637744535}
   m_Layer: 13
-  m_Name: fishing_pole_v5
+  m_Name: NewRod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1533,8 +1533,8 @@ MonoBehaviour:
   - {fileID: 6878046647564660333}
   - {fileID: 6878046649112168808}
   - {fileID: 6878046649547866194}
-  - {fileID: 8493219181707948177, guid: d8ca3038a01f71b49a1885d810e84a26, type: 3}
-  - {fileID: 6951408081480726096, guid: 6712a3e832530ec4392becb1d3afd63b, type: 3}
+  - {fileID: 6878046647564660332}
+  - {fileID: 6878046648759948123}
   - {fileID: 6878046647526483942}
   - {fileID: 6878046649407383604}
   publicVariablesSerializationDataFormat: 0
