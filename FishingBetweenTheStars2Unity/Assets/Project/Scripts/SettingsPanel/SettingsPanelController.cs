@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class SettingsPanelController : UdonSharpBehaviour
 {
+    private const float DEFAULT_TIME_STEP = 0.02f;
+    private float timeStepRatio;
     [Header("UI elements")]
     public Slider maxSpeedSlider;
     public Text maxSpeedText;
@@ -28,6 +30,7 @@ public class SettingsPanelController : UdonSharpBehaviour
     public FishingGameController fishingGameController;
     void FixedUpdate()
     {
+        timeStepRatio = Time.fixedDeltaTime/DEFAULT_TIME_STEP;
         maxSpeedText.text = ""+maxSpeedSlider.value;
         maxFallSpeedText.text = ""+maxFallSpeedSlider.value;
         accelText.text = ""+accelSlider.value;
@@ -36,8 +39,8 @@ public class SettingsPanelController : UdonSharpBehaviour
         boundAdjustmentText.text = ""+boundAdjustmentSlider.value;
         if(fishingGameController != null) 
         {
-            fishGameTicks.text = ""+fishingGameController.GetGameTicks();
-            fixedUpdateRate.text = ""+Time.fixedDeltaTime;
+            fishGameTicks.text = ""+timeStepRatio;
+            fixedUpdateRate.text = ""+Time.fixedDeltaTime / timeStepRatio;
         }
     }
 

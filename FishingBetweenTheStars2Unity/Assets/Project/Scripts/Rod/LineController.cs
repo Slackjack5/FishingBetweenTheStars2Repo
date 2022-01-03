@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using VRC.SDKBase;
 using VRC.Udon;
 
+[DefaultExecutionOrder(1)]
 public class LineController : UdonSharpBehaviour
 {
     private LineRenderer lineRenderer;

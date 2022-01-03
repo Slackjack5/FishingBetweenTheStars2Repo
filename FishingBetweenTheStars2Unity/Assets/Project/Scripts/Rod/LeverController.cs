@@ -4,8 +4,11 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+[DefaultExecutionOrder(0)]
 public class LeverController : UdonSharpBehaviour
 {
+    private const float DEFAULT_TIME_STEP = 0.02f;
+    private float timeStepRatio;
     private Rigidbody lever;
     private HingeJoint leverHinge;
     private float angularVelocity;
@@ -22,13 +25,13 @@ public class LeverController : UdonSharpBehaviour
     public float reelingThreshold; // speed threshold to determine if they are reeling or not
     void Start() 
     {
+        timeStepRatio = Time.fixedDeltaTime/DEFAULT_TIME_STEP;
         lever = GetComponent<Rigidbody>();
         leverHinge = GetComponent<HingeJoint>();
         initialDrag = lever.angularDrag;
         isReeling = false;
         previousAngle = 0;
     }
-
     void FixedUpdate()
     {
         if(isHeld)
@@ -40,7 +43,7 @@ public class LeverController : UdonSharpBehaviour
             spring.targetPosition = angle;
             leverHinge.spring = spring;
         }
-        angularVelocity = leverHinge.angle - previousAngle;
+        angularVelocity = (leverHinge.angle - previousAngle) * timeStepRatio;
         previousAngle = leverHinge.angle;
         if(angularVelocity > reelingThreshold) 
         {

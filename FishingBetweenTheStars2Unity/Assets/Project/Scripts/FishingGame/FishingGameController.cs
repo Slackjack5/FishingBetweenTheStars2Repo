@@ -5,8 +5,11 @@ using VRC.SDKBase;
 using VRC.Udon;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(2)]
 public class FishingGameController : UdonSharpBehaviour
 {
+    private const float DEFAULT_TIME_STEP = 0.02f;
+    private float timeStepRatio;
     [Header("Fish variables")]
     public float catchRate; // catch percentage per tick when fish is in catch range
     public float escapeRate; // catch percentage decrease per tick when fish is not in catch range
@@ -47,13 +50,14 @@ public class FishingGameController : UdonSharpBehaviour
     // needs to be public so sliders can reinstantiate stuff
     public void Start()
     {
+        timeStepRatio = Time.fixedDeltaTime/DEFAULT_TIME_STEP;
         bounds = boardSize/(backgroundUI.rect.width/playerUI.rect.width) * boundAdjustment;
         fish = GetComponentInChildren<Fish>();
-        fish.CreateFish(catchRate, escapeRate, fishMaxSpeed, fishAccel, minDistToTarget);
+        fish.CreateFish(catchRate * timeStepRatio, escapeRate * timeStepRatio, fishMaxSpeed * timeStepRatio, fishAccel * timeStepRatio, minDistToTarget);
         fish.SetPosition(bounds);
         fish.SetTarget(bounds);
         player = GetComponentInChildren<Player>();
-        player.CreatePlayer(maxSpeed, maxFallSpeed, accel, gravity, bounce);
+        player.CreatePlayer(maxSpeed * timeStepRatio, maxFallSpeed * timeStepRatio, accel * timeStepRatio, gravity * timeStepRatio, bounce);
         player.SetPosition(bounds);
         line = linePrefab.GetComponent<LineController>();
         canvas.SetActive(false);

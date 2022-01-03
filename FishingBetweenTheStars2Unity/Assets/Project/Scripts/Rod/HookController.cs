@@ -6,11 +6,11 @@ using VRC.Udon;
 
 public class HookController : UdonSharpBehaviour
 {
-    private Rigidbody rigidbody;
+    private Rigidbody hookRB;
     private LineController line;
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        hookRB = GetComponent<Rigidbody>();
         line = GetComponentInParent<LineController>();
     }
     void OnCollisionEnter(Collision collision)
@@ -19,7 +19,7 @@ public class HookController : UdonSharpBehaviour
         {
             if(collision.gameObject.name == "Water") 
             {
-                rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+                hookRB.constraints = RigidbodyConstraints.FreezeAll;
                 line.SetInWater(true);
             }
             else

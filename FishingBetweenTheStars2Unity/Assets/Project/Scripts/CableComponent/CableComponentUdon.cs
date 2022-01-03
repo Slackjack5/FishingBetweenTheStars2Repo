@@ -23,9 +23,6 @@ public class CableComponentUdon : UdonSharpBehaviour
 	// Solver config
 	[SerializeField] private int verletIterations = 1;
 	[SerializeField] private int solverIterations = 1;
-
-	//[Range(0,3)]
-	[SerializeField] private float stiffness = 1f;
     
     // Needed GameObjects
     [Header("Required GameObjects")]
