@@ -106,6 +106,14 @@ public class SettingsPanelController : UdonSharpBehaviour
         bounceSlider.value = bounceValue;
         boundAdjustmentText.text = ""+boundAdjustmentValue;
         boundAdjustmentSlider.value = boundAdjustmentValue;
+        fishingGameController = currentFishingRod.GetComponentInChildren<FishingGameController>();
+        fishingGameController.maxSpeed = maxSpeedSlider.value;
+        fishingGameController.maxFallSpeed = maxFallSpeedSlider.value;
+        fishingGameController.accel = accelSlider.value;
+        fishingGameController.gravity = gravitySlider.value;
+        fishingGameController.bounce = bounceSlider.value;
+        fishingGameController.boundAdjustment = boundAdjustmentSlider.value;
+        fishingGameController.Start();
     }
 
     // overriding onpickup because buttons are really stupid

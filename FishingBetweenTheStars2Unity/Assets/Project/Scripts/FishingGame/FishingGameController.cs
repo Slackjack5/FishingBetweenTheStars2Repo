@@ -60,7 +60,8 @@ public class FishingGameController : UdonSharpBehaviour
         player.CreatePlayer(maxSpeed * timeStepRatio, maxFallSpeed * timeStepRatio, accel * timeStepRatio, gravity * timeStepRatio, bounce);
         player.SetPosition(bounds);
         line = linePrefab.GetComponent<LineController>();
-        canvas.SetActive(false);
+        gameActive = false;
+        canvas.SetActive(gameActive);
         gameTicks = 0;
     }
 
@@ -68,9 +69,10 @@ public class FishingGameController : UdonSharpBehaviour
     {
         if(line.GetWater())
         {
-            if(!canvas.activeSelf)
+            if(!gameActive)
             {
-                canvas.SetActive(true);
+                gameActive = true;
+                canvas.SetActive(gameActive);
             }
             fish.Move(boardSize, bounds);
             player.Move(boardSize, bounds, line.GetReeling());
@@ -82,6 +84,12 @@ public class FishingGameController : UdonSharpBehaviour
             else
             {
                 fish.AddEscape();
+            }
+            if(fish.GetPercentageCaught() == 1)
+            {
+                Start();
+                line.ResetLine();
+                return;
             }
             UpdateUI();
         }
@@ -105,4 +113,8 @@ public class FishingGameController : UdonSharpBehaviour
         return gameTicks;
     }
 
+    public float GetPercentageCaught()
+    {
+        return fish.GetPercentageCaught();
+    }
 }

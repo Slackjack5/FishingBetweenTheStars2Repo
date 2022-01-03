@@ -7,27 +7,29 @@ using VRC.Udon;
 public class RodController : UdonSharpBehaviour
 {
     private LineController lineController;
-    private FishingGameController fishingGameController;
-    [UdonSynced] private bool isActive;
+    [Header("Required VRC components")]
+    public VRC_Pickup leverHandlePickup; // needed to make handle pickuppable locally for the person who claimed the rod
+    public VRC_Pickup rodPickup;
+    [UdonSynced] private bool isInUse;
+    private VRCPlayerApi currentPlayer;
     void Start()
     {
         lineController = GetComponentInChildren<LineController>();
-        fishingGameController = GetComponentInChildren<FishingGameController>();
     }
 
-    public void Reset()
+    void FixedUpdate()
     {
-        SetRodActive(false);
-        lineController.ResetLine();
-        fishingGameController.Start();
+        if(currentPlayer != null && currentPlayer.IsValid())
+        {
+            isInUse = false;
+        }
     }
 
-    public void SetRodActive(bool active)
+    public override void OnPickup()
     {
-        isActive = active;
-        gameObject.SetActive(isActive);
+        leverHandlePickup.pickupable = true;
     }
-
+    
     public override void OnPickupUseUp()
     {
         if(!lineController.GetCast()) {
@@ -37,6 +39,12 @@ public class RodController : UdonSharpBehaviour
 
     public override void OnDeserialization()
     {
-        gameObject.SetActive(isActive);
+        rodPickup.pickupable = !isInUse;
+    }
+
+    public override bool OnOwnershipRequest(VRCPlayerApi requester, VRCPlayerApi newOwner)
+    {
+        currentPlayer = newOwner;
+        return true;
     }
 }

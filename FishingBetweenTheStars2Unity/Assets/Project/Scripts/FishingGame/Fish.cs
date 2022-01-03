@@ -44,7 +44,12 @@ public class Fish : UdonSharpBehaviour
 
     public void AddEscape()
     {
-        percentageCaught = Mathf.Max(0, percentageCaught - catchRate);
+        percentageCaught = Mathf.Max(0, percentageCaught - escapeRate);
+    }
+
+    public float GetPercentageCaught()
+    {
+        return percentageCaught;
     }
 
     public float GetCaught()

@@ -64,9 +64,9 @@ public class CableComponentUdon : UdonSharpBehaviour
 		for (int pointIdx = 0; pointIdx <= segments; pointIdx++) {
 			// Initial position
 			Vector3 initialPosition = transform.position + (cableDirection * (initialSegmentLength * pointIdx));
-			GameObject temp = VRCInstantiate(cableParticleUdon);
-			temp.transform.SetParent(transform);
-			points[pointIdx] = temp.GetComponent<CableParticleUdon>();
+			CableParticleUdon particle = transform.GetChild(pointIdx).GetComponent<CableParticleUdon>();
+			particle.CreateCableParticle(initialPosition);
+			points[pointIdx] = particle;
 		}
 
 		// Bind start and end particles with their respective gameobjects

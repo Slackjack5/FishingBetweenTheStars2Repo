@@ -19,10 +19,10 @@ public class RodPool : UdonSharpBehaviour
         for(int i = 0; i < poolSize; i++)
         {
             GameObject currentObject = transform.GetChild(i).gameObject;
-            if(!currentObject.activeSelf)
+            if(!currentObject.GetComponent<RodContainerController>().isRodActive())
             {
                 currentObject.transform.SetPositionAndRotation(transform.position, transform.rotation);
-                currentObject.GetComponent<RodController>().SetRodActive(true);
+                currentObject.GetComponent<RodContainerController>().SetRodActive(true);
                 return currentObject;
             }
         }
@@ -33,6 +33,6 @@ public class RodPool : UdonSharpBehaviour
     public void ReturnToPool(GameObject obj)
     {
         if(obj == null) return;
-        obj.GetComponent<RodController>().Reset();
+        obj.GetComponent<RodContainerController>().ResetRod();
     }
 }
