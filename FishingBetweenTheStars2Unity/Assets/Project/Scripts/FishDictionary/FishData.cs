@@ -17,10 +17,6 @@ public class FishData : UdonSharpBehaviour
   private int tier;
   private string description;
   private Sprite sprite;
-  void Start()
-    {
-        
-    }
 
   public void SetFishData(int id, string fishname, string description, int rarity, int tier, int Value, float BaseChance, int Power, int FavoriteFish)
   {
@@ -34,4 +30,37 @@ public class FishData : UdonSharpBehaviour
     this.favoriteFish = FavoriteFish;
     this.tier = tier;
   }
+  public int getFishId()
+  {
+    return id;
+  }
+  public string getFishName()
+  {
+    return fishName;
+  }
+  public string getFishDescription()
+  {
+    return description;
+  }
+  public int getFishRarity()
+  {
+    return rarity;
+  }
+  public int getFishTier()
+  {
+    return value  ;
+  }
+  public int getFishPower()
+  {
+    return power;
+  }
+  public float getFishBaseChance()
+  {
+    return baseChance;
+  }
+  public int getFavoriteFish()
+  {
+    return favoriteFish;
+  }
+
 }
