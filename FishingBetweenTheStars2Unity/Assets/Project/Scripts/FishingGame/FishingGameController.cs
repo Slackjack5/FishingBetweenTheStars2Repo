@@ -23,6 +23,7 @@ public class FishingGameController : UdonSharpBehaviour
     public float gravity; // how fast the area falls
     public float bounce; // what percentage of momentum is maintained when area bounces at bottom of UI
     public float boundAdjustment; // multiplier on bounds of the area inside the player (hitbox adjustment)
+    public float swingRadius; // radius in which the swing sphere can spawn
     [Header("UI elements")]
     public RectTransform playerUI;
     public RectTransform fishUI;
@@ -33,6 +34,8 @@ public class FishingGameController : UdonSharpBehaviour
     public GameObject fishPrefab;
     public GameObject linePrefab;
     public GameObject canvas;
+    public GameObject newRod; // rod prefab for swinging
+    public GameObject swingIndicator; // swing indicator prefab
 
     private bool gameActive; // is the game active?
     private Fish fish; // the fish being caught in this game
@@ -40,7 +43,10 @@ public class FishingGameController : UdonSharpBehaviour
     private LineController line; // getting data from the fishing rod
     private const float boardSize = 200; // how big the board is
     private float bounds; // the size of the bounds of the player, determined by boardSize, UIboardSize, and playerUI size
-    private int gameTicks; // how many game ticks have happened
+    private bool hasSwungRod;
+    private bool swingIndicatorSpawned;
+    private GameObject currentSwingIndicator;
+    private Transform initialPosOfRod; // initialPos of rod when swing event occured
 
     float gameToUICoords(float gameCoords)
     {
@@ -61,8 +67,8 @@ public class FishingGameController : UdonSharpBehaviour
         player.SetPosition(bounds);
         line = linePrefab.GetComponent<LineController>();
         gameActive = false;
+        swingIndicatorSpawned = false;
         canvas.SetActive(gameActive);
-        gameTicks = 0;
     }
 
     void FixedUpdate()
@@ -74,24 +80,40 @@ public class FishingGameController : UdonSharpBehaviour
                 gameActive = true;
                 canvas.SetActive(gameActive);
             }
-            fish.Move(boardSize, bounds);
-            player.Move(boardSize, bounds, line.GetReeling());
-            gameTicks++;
-            if(Mathf.Abs(fish.GetPosition() - player.GetPosition()) < bounds)
+            if(fish.GetPercentageCaught() > 0.2 && hasSwungRod == false)
             {
-                fish.AddCaught();
+                if(swingIndicatorSpawned == false)
+                {
+                    currentSwingIndicator = VRCInstantiate(swingIndicator);
+                    currentSwingIndicator.transform.position = line.transform.position + new Vector3(Random.value * swingRadius + swingRadius/5, Random.value * swingRadius + swingRadius/5, Random.value * swingRadius + swingRadius/5);
+                    swingIndicatorSpawned = true;
+                }
+                if(currentSwingIndicator.GetComponent<SwingIndicatorController>().GetCollidedWithLine())
+                {
+                    hasSwungRod = true;
+                    Destroy(currentSwingIndicator);
+                }
             }
             else
             {
-                fish.AddEscape();
+                fish.Move(boardSize, bounds);
+                player.Move(boardSize, bounds, line.GetReeling());
+                if(Mathf.Abs(fish.GetPosition() - player.GetPosition()) < bounds)
+                {
+                    fish.AddCaught();
+                }
+                else
+                {
+                    fish.AddEscape();
+                }
+                if(fish.GetPercentageCaught() == 1)
+                {
+                    Start();
+                    line.ResetLine();
+                    return;
+                }
+                UpdateUI();
             }
-            if(fish.GetPercentageCaught() == 1)
-            {
-                Start();
-                line.ResetLine();
-                return;
-            }
-            UpdateUI();
         }
     }
 
@@ -106,11 +128,11 @@ public class FishingGameController : UdonSharpBehaviour
         playerUI.anchoredPosition3D = playerPos;
 
         progressUI.value = fish.GetCaught();
-    }
 
-    public int GetGameTicks()
-    {
-        return gameTicks;
+        /*if(indicateRodSwing)
+        {
+
+        }*/
     }
 
     public float GetPercentageCaught()

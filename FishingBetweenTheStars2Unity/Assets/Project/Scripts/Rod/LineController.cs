@@ -34,6 +34,7 @@ public class LineController : UdonSharpBehaviour
     public float percentageToReelUpward;
     [Tooltip("Multiplier on the launch force of the hook when casting the line")]
     public float launchForceMultiplier;
+    public float maxUpwardsReelPercent; // what is the maximum percentage the line can be reeled up when game is completed
     void Start()
     {
         fishingGameController = fishingGame.GetComponent<FishingGameController>();
@@ -88,9 +89,9 @@ public class LineController : UdonSharpBehaviour
             percentageLeftToReel -= percentageToReel;
             Vector3 hookDistXZ = new Vector3(hookDistAfterCast.x, 0, hookDistAfterCast.z);
             Vector3 hookDistY = new Vector3(0, hookDistAfterCast.y, 0);
-            if(percentageLeftToReel < percentageToReelUpward) // if less than 10% of the time is remaining to reel, start reeling vertically
+            if(percentageLeftToReel < percentageToReelUpward) // if less than percentageToReelUpward% of the time is remaining to reel, start reeling vertically
             {
-                hook.transform.SetPositionAndRotation(hook.transform.position - hookDistY*percentageToReel*(1/percentageToReelUpward) - hookDistXZ*percentageToReel, hook.transform.rotation);
+                hook.transform.SetPositionAndRotation(hook.transform.position - hookDistY*percentageToReel*(1/percentageToReelUpward * maxUpwardsReelPercent) - hookDistXZ*percentageToReel, hook.transform.rotation);
             }
             else
             {
