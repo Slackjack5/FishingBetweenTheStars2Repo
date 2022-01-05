@@ -416,6 +416,16 @@ using VRC.Udon;
 
             }
         }
+        
+        // sets owner on all children of object
+        void SetOwnerOnAllChildren(GameObject gameObject)
+        {
+            for(int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                Networking.SetOwner(Networking.LocalPlayer, gameObject.transform.GetChild(i).gameObject);
+                SetOwnerOnAllChildren(gameObject.transform.GetChild(i).gameObject);
+            }
+        }
 
         #endregion
 
@@ -451,6 +461,7 @@ using VRC.Udon;
                 assert(lastState == STATE_IDLE_NOT_MINE, "Tried to use while illegal state=" + lastState);
 
                 Networking.SetOwner(Networking.LocalPlayer, this.gameObject);
+                SetOwnerOnAllChildren(this.gameObject);
                 ownershipTimeout = OWNERSHIP_TIMEOUT_DURATION;
                 ownershipDelay = OWNERSHIP_DELAY_DURATION;
                 lastState = STATE_WAITING_OWNERSHIP;

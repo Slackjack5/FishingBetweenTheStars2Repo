@@ -14,6 +14,7 @@ public class LineController : UdonSharpBehaviour
     private Vector3 hookDistAfterCast; // position at which hook landed after it was cast
     [UdonSynced] private Vector3 hookPos;
     [UdonSynced] private bool showWire;
+    [UdonSynced] private bool updateHook;
     private float percentageLeftToReel;
     private bool isCast;
     private bool inWater; // if the hook is in the water
@@ -39,17 +40,18 @@ public class LineController : UdonSharpBehaviour
         leverController = lever.GetComponent<LeverController>();
         lineRenderer = gameObject.GetComponent<LineRenderer>();
         hookRigidbody = hook.GetComponent<Rigidbody>();
-        lineRenderer.enabled = true;
+        lineRenderer.enabled = false;
         showWire = false;
         isCast = false;
         inWater = false;
+        updateHook = false;
         velocityEstimator = GetComponent<VelocityEstimator>();
         percentageLeftToReel = 1;
     }
 
     void FixedUpdate()
     {
-        if(Networking.GetOwner(container) == Networking.LocalPlayer)
+        if(Networking.GetOwner(gameObject) == Networking.LocalPlayer)
         {
             if(Vector3.Distance(transform.position, castPosition) > maxDistanceFromCast)
             {
@@ -60,6 +62,7 @@ public class LineController : UdonSharpBehaviour
                 ReelLine();
             }
             hookPos = hook.transform.position;
+            updateHook = !updateHook;
         }
     }
 
@@ -138,7 +141,7 @@ public class LineController : UdonSharpBehaviour
 
     public override void OnDeserialization()
     {
-        if(Networking.GetOwner(container) != Networking.LocalPlayer)
+        if(Networking.GetOwner(gameObject) != Networking.LocalPlayer)
         {
             hook.transform.position = hookPos;
             lineRenderer.enabled = showWire; 
