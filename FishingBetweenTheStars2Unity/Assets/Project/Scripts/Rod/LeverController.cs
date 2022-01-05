@@ -23,6 +23,7 @@ public class LeverController : UdonSharpBehaviour
     public GameObject rodController;
     [Header("Lever variables")]
     public float reelingThreshold; // speed threshold to determine if they are reeling or not
+    public float rodMovementOffset; // how much moving the rod will stop the reel from moving the bob
     void Start() 
     {
         timeStepRatio = Time.fixedDeltaTime/DEFAULT_TIME_STEP;
@@ -43,7 +44,7 @@ public class LeverController : UdonSharpBehaviour
             spring.targetPosition = angle;
             leverHinge.spring = spring;
         }
-        angularVelocity = (leverHinge.angle - previousAngle) * timeStepRatio;
+        angularVelocity = (leverHinge.angle - previousAngle) * timeStepRatio - rodController.GetComponent<VelocityEstimator>().GetPredictedVelocity().magnitude * rodMovementOffset;
         previousAngle = leverHinge.angle;
         if(angularVelocity > reelingThreshold) 
         {

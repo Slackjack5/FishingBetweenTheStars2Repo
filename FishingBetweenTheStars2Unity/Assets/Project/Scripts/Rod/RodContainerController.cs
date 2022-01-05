@@ -6,9 +6,14 @@ using VRC.Udon;
 
 public class RodContainerController : UdonSharpBehaviour
 {
+    [Header("Required GameObjects")]
+    public VRC_Pickup leverHandlePickup;
+    public VRC_Pickup rodPickup;
     private LineController lineController;
     private FishingGameController fishingGameController;
     [UdonSynced] private bool isActive;
+    [UdonSynced] string EXUR_Tag;
+    [UdonSynced] int EXUR_LastUsedTime;
     void Start()
     {
         lineController = GetComponentInChildren<LineController>();
@@ -43,5 +48,25 @@ public class RodContainerController : UdonSharpBehaviour
     public bool isRodActive()
     {
         return isActive;
+    }
+
+    public void EXUR_Reinitialize()
+    {
+        SetRodActive(true);
+        leverHandlePickup.pickupable = true;
+        rodPickup.pickupable = true;
+        /*fishingGameController.maxSpeed = maxSpeedSlider.value;
+        fishingGameController.maxFallSpeed = maxFallSpeedSlider.value;
+        fishingGameController.accel = accelSlider.value;
+        fishingGameController.gravity = gravitySlider.value;
+        fishingGameController.bounce = bounceSlider.value;
+        fishingGameController.boundAdjustment = boundAdjustmentSlider.value;
+        fishingGameController.Start();*/
+    }
+    public void EXUR_Finalize()
+    {
+        leverHandlePickup.pickupable = false;
+        rodPickup.pickupable = false;
+        ResetRod();
     }
 }
