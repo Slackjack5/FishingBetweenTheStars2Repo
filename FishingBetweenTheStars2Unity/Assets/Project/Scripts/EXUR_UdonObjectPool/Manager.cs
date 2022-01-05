@@ -389,6 +389,37 @@ using VRC.Udon;
             }
         }
 
+        GameObject AcquireGameObjectWithTagImpl(string tag)
+        {
+            // Search handlers having specified tag
+            int foundCount = 0;
+            Handler targetHandler = null;
+            var n = objects.Length;
+            for (int i = 0; i < n; i++) {
+                var obj = objects[i];
+                if (IsSiblingHavingValue(obj, TAG_VALUE_VAR_NAME, tag))
+                {
+                    foundCount++;
+                    targetHandler = obj;
+                }
+            }
+            debug($" foundCount={foundCount}");
+
+            if (1 < foundCount)
+            {
+                ReportFailure($"{FAILURE_INFO_HEAD_INTERNAL_ERROR}: Multiple {foundCount} objects have identical tag='{tag}'");
+                return null;
+            }
+            else if (foundCount == 1)
+            {
+                return targetHandler.gameObject;
+            }
+            else // foundCount == 0
+            {
+                return null;
+            }
+        }
+
 
         void ReactToEvent(Handler eventSource, string eventName)
         {
@@ -514,6 +545,25 @@ using VRC.Udon;
         {
             AcquireObjectWithTag_tag = ""+Networking.LocalPlayer.playerId;
             AcquireObjectWithTag();
+        }
+
+        public GameObject AquireGameObjectWithTag(string tag)
+        {
+            if (tag == null)
+            {
+                ReportFailure($"{FAILURE_INFO_HEAD_USER_PROGRAM_ERROR}: Specified tag was null");
+                return null;
+            }
+            else if (tag.Equals(""))
+            {
+                ReportFailure($"{FAILURE_INFO_HEAD_USER_PROGRAM_ERROR}: Specified tag was empty string");
+                return null;
+            }
+            else
+            {
+                log($"AcquireObjectWithTag Tag='{tag}'");
+                return AcquireGameObjectWithTagImpl(tag);
+            }
         }
 
         #endregion
