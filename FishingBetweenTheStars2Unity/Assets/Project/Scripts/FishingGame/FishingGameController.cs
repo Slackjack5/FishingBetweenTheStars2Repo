@@ -10,6 +10,7 @@ public class FishingGameController : UdonSharpBehaviour
 {
     private const float DEFAULT_TIME_STEP = 0.02f;
     private float timeStepRatio;
+    public bool simulateGame; // whether or not to simulate the actual game or use the settings panel
     [Header("Fish variables")]
     public float catchRate; // catch percentage per tick when fish is in catch range
     public float escapeRate; // catch percentage decrease per tick when fish is not in catch range
@@ -36,6 +37,7 @@ public class FishingGameController : UdonSharpBehaviour
     public GameObject canvas;
     public GameObject newRod; // rod prefab for swinging
     public GameObject swingIndicator; // swing indicator prefab
+    public FishDictionary fishDictionary; // fish dictionary script
 
     private bool gameActive; // is the game active?
     private Fish fish; // the fish being caught in this game
@@ -87,8 +89,17 @@ public class FishingGameController : UdonSharpBehaviour
         {
             if(!gameActive)
             {
-                gameActive = true;
-                canvas.SetActive(gameActive);
+                if(simulateGame)
+                {
+                    if(Random.value > 0.995)
+                    {
+                        canvas.SetActive(gameActive);
+                    }
+                }
+                else
+                {
+                    canvas.SetActive(gameActive);
+                }
             }
             if(fish.GetPercentageCaught() > 0.2 && hasSwungRod == false)
             {

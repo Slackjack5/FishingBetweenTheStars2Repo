@@ -83,4 +83,27 @@ public class FishDictionary : UdonSharpBehaviour
     return FishArray[ID];
   }
 
+  public FishData rollFish(int fishTier)
+  {
+    float roll = Random.value;
+    float totalChance = 0;
+    for(int i = 0; i < FishArray.Length; i++)
+    {
+      if(FishArray[i].getFishTier() == fishTier)
+      {
+        totalChance += FishArray[i].getFishBaseChance();
+        if(totalChance >= roll)
+        {
+          return FishArray[i];
+        }
+      }
+    }
+    return null; // this will only happen if no fish of the fishTier prompted exist
+  }
+
+  public int getTierFromPower(int power)
+  {
+    return power / 50;
+  }
+
 }

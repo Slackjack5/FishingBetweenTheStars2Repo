@@ -49,7 +49,11 @@ public class FishData : UdonSharpBehaviour
   }
   public int getFishTier()
   {
-    return value  ;
+    return tier;
+  }
+  public int getFishValue()
+  {
+    return value;
   }
   public int getFishPower()
   {
