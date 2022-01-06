@@ -5,12 +5,13 @@ using VRC.SDKBase;
 using VRC.Udon;
 public class FishDictionary : UdonSharpBehaviour
 {
-  [SerializeField] private FishData[] FishArray;
+  private FishData[] FishArray;
   [SerializeField] private Sprite[] spriteArray;
 
   public GameObject fishTemplate;
   void Start()
   {
+    FishArray = new FishData[34];
     BuildFishDictionary();
   }
 
