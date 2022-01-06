@@ -73,7 +73,6 @@ public class LineController : UdonSharpBehaviour
         hookRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         hookRigidbody.AddForce(velocityEstimator.GetPredictedVelocity() * launchForceMultiplier);
         hook.transform.SetParent(null); // we don't want the hook to move with respect to the rod anymore
-        fishingGameController.Start();
         lineRenderer.enabled = true;
         showWire = true;
         isCast = true;
@@ -102,6 +101,7 @@ public class LineController : UdonSharpBehaviour
 
     public void ResetLine()
     {
+        fishingGameController.Start();
         hookRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         lineRenderer.enabled = false;
         hook.transform.SetParent(transform);

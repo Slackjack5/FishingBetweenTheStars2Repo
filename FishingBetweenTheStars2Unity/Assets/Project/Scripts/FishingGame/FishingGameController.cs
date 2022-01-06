@@ -56,6 +56,7 @@ public class FishingGameController : UdonSharpBehaviour
     // needs to be public so sliders can reinstantiate stuff
     public void Start()
     {
+        Destroy(currentSwingIndicator);
         timeStepRatio = Time.fixedDeltaTime/DEFAULT_TIME_STEP;
         bounds = boardSize/(backgroundUI.rect.width/playerUI.rect.width) * boundAdjustment;
         fish = GetComponentInChildren<Fish>();
@@ -68,9 +69,18 @@ public class FishingGameController : UdonSharpBehaviour
         line = linePrefab.GetComponent<LineController>();
         gameActive = false;
         swingIndicatorSpawned = false;
+        hasSwungRod = false;
         canvas.SetActive(gameActive);
     }
 
+    void Update()
+    {
+        if(currentSwingIndicator != null)
+        {
+            currentSwingIndicator.GetComponent<LineRenderer>().SetPosition(0, currentSwingIndicator.transform.position);
+            currentSwingIndicator.GetComponent<LineRenderer>().SetPosition(1, line.transform.position);
+        }
+    }    
     void FixedUpdate()
     {
         if(line.GetWater())
@@ -112,8 +122,8 @@ public class FishingGameController : UdonSharpBehaviour
                     line.ResetLine();
                     return;
                 }
-                UpdateUI();
             }
+            UpdateUI();
         }
     }
 
@@ -129,10 +139,14 @@ public class FishingGameController : UdonSharpBehaviour
 
         progressUI.value = fish.GetCaught();
 
-        /*if(indicateRodSwing)
+        if(swingIndicatorSpawned && !hasSwungRod)
         {
-
-        }*/
+            progressUI.transform.GetChild(3).gameObject.SetActive(true);
+        }
+        else
+        {
+            progressUI.transform.GetChild(3).gameObject.SetActive(false);
+        }
     }
 
     public float GetPercentageCaught()
