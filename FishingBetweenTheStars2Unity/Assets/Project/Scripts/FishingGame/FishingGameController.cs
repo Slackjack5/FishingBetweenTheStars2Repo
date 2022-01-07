@@ -49,6 +49,7 @@ public class FishingGameController : UdonSharpBehaviour
     private bool swingIndicatorSpawned;
     private GameObject currentSwingIndicator;
     private Transform initialPosOfRod; // initialPos of rod when swing event occured
+    private FishData fishData;
 
     float gameToUICoords(float gameCoords)
     {
@@ -93,11 +94,14 @@ public class FishingGameController : UdonSharpBehaviour
                 {
                     if(Random.value > 0.995)
                     {
+                        fishData = fishDictionary.rollFish(0);
+                        gameActive = true;
                         canvas.SetActive(gameActive);
                     }
                 }
                 else
                 {
+                    gameActive = true;
                     canvas.SetActive(gameActive);
                 }
             }
@@ -129,8 +133,8 @@ public class FishingGameController : UdonSharpBehaviour
                 }
                 if(fish.GetPercentageCaught() == 1)
                 {
-                    Start();
                     line.ResetLine();
+                    Start();
                     return;
                 }
             }
@@ -163,5 +167,10 @@ public class FishingGameController : UdonSharpBehaviour
     public float GetPercentageCaught()
     {
         return fish.GetPercentageCaught();
+    }
+
+    public FishData GetFishData()
+    {
+        return fishData;
     }
 }

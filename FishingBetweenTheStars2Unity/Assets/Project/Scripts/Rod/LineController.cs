@@ -27,6 +27,7 @@ public class LineController : UdonSharpBehaviour
     public GameObject lever;
     public GameObject fishingGame;
     public GameObject container;
+    public GameObject jumpingFish;
     [Header("Line Attributes")]
     [Tooltip("Max distance the player can move the rod from original cast position before the line breaks")]
     public float maxDistanceFromCast;
@@ -101,6 +102,10 @@ public class LineController : UdonSharpBehaviour
 
     public void ResetLine()
     {
+        if(fishingGameController.GetPercentageCaught() >= 1)
+        {
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "CaughtFish");
+        }
         fishingGameController.Start();
         hookRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         lineRenderer.enabled = false;
@@ -111,6 +116,13 @@ public class LineController : UdonSharpBehaviour
         showWire = false;
         isCast = false;
         inWater = false;
+    }
+
+    public void CaughtFish()
+    {
+        GameObject currentFish = VRCInstantiate(jumpingFish);
+        currentFish.transform.position = hook.transform.position + new Vector3(0, 1, 0);
+        Destroy(currentFish, 3);
     }
 
     public void SetCast(bool cast)
@@ -145,7 +157,7 @@ public class LineController : UdonSharpBehaviour
         if(Networking.GetOwner(gameObject) != Networking.LocalPlayer)
         {
             hook.transform.position = hookPos;
-            lineRenderer.enabled = showWire; 
+            lineRenderer.enabled = showWire;
         }
     }
 }
