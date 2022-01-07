@@ -8,6 +8,7 @@ public class InventorySlot : UdonSharpBehaviour
 {
  public void selected()
   {
-
+    GameObject temp = gameObject.transform.parent.gameObject;
+    temp.GetComponent<InventoryTab>().slotObjectSelected = gameObject;
   }
 }
