@@ -15,13 +15,10 @@ public class InventoryTab : UdonSharpBehaviour
   public GameObject slotObjectSelected;
   private int slotIdSelected;
   public Sprite unknownFish;
+  public Sprite emptySlot;
+  public Sprite[] SlotRarities;
 
-
-  private void FixedUpdate()
-  {
-
-  }
-  public void AddToBag(int Id)
+  public void AddToBag(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
   {
     for (int i = 0; i < (inventorySlots.Length/2)-1; i++)
     {
@@ -42,6 +39,23 @@ public class InventoryTab : UdonSharpBehaviour
         }
         //Say the Slot is Full
         isFull[i] = true;
+        //Change Slot Color to Rarity
+        if(fishDictionary.getFishData(FishId[i]).getFishRarity()==0)
+        {
+          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[0];
+        }
+        else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 1)
+        {
+          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[2];
+        }
+        else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 2)
+        {
+          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[3];
+        }
+        else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 3)
+        {
+          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[4];
+        }
         break;
       }
 
@@ -61,6 +75,16 @@ public class InventoryTab : UdonSharpBehaviour
     }
   }
 
+  public void RemoveItem(int slot) //Type Remove and Give a the slot you want to clear
+  {
+    inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
+    isFull[slot] = false;    //Show that the slot is now Open
+    FishId[slot] = 0;     //Make slot data our Empty Slot
+    GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
+    Child.GetComponent<Image>().sprite = emptySlot;
+  }
+
+
   public void UpdateMainPanel(int Id)
   {
     //Change Main Image
@@ -78,9 +102,7 @@ public class InventoryTab : UdonSharpBehaviour
     {
       Child.GetComponent<Image>().sprite = unknownFish;
     }
-
     //Say the Slot is Full
-   
     isFull[inventorySlots.Length-1] = true;
     
    //Change Fish Name 
@@ -108,7 +130,33 @@ public class InventoryTab : UdonSharpBehaviour
    //Change Tier Number
    Child = inventorySlots[inventorySlots.Length - 1].transform.GetChild(6).gameObject;
    Child.GetComponent<TMPro.TextMeshProUGUI>().text = fishDictionary.getFishData(FishId[inventorySlots.Length - 1]).getFishTier().ToString();
-   
-   
+
+    //Change Slot Color and Tag to Rarity
+    Child = inventorySlots[inventorySlots.Length - 1].transform.GetChild(7).gameObject;
+    if (fishDictionary.getFishData(FishId[inventorySlots.Length - 1]).getFishRarity() == 0)
+    {
+      inventorySlots[inventorySlots.Length - 1].GetComponent<Image>().sprite = SlotRarities[0];
+      Child.GetComponent<TMPro.TextMeshProUGUI>().text = "Common";
+    }
+    else if (fishDictionary.getFishData(FishId[inventorySlots.Length - 1]).getFishRarity() == 1)
+    {
+      inventorySlots[inventorySlots.Length - 1].GetComponent<Image>().sprite = SlotRarities[2];
+      Child.GetComponent<TMPro.TextMeshProUGUI>().text = "Uncommon";
+    }
+    else if (fishDictionary.getFishData(FishId[inventorySlots.Length - 1]).getFishRarity() == 2)
+    {
+      inventorySlots[inventorySlots.Length - 1].GetComponent<Image>().sprite = SlotRarities[3];
+      Child.GetComponent<TMPro.TextMeshProUGUI>().text = "Rare";
+    }
+    else if (fishDictionary.getFishData(FishId[inventorySlots.Length - 1]).getFishRarity() == 3)
+    {
+      inventorySlots[inventorySlots.Length - 1].GetComponent<Image>().sprite = SlotRarities[4];
+      Child.GetComponent<TMPro.TextMeshProUGUI>().text = "Legendary";
+    }
+    else if (fishDictionary.getFishData(FishId[inventorySlots.Length - 1]).getFishRarity() == 5)
+    {
+      inventorySlots[inventorySlots.Length - 1].GetComponent<Image>().sprite = SlotRarities[0];
+      Child.GetComponent<TMPro.TextMeshProUGUI>().text = ""; //Empty Slot
+    }
   }
 }
