@@ -16,9 +16,14 @@ public class InventoryTab : UdonSharpBehaviour
   private int slotIdSelected;
   public Sprite unknownFish;
 
+
+  private void FixedUpdate()
+  {
+
+  }
   public void AddToBag(int Id)
   {
-    for (int i = 0; i < inventorySlots.Length-1; i++)
+    for (int i = 0; i < (inventorySlots.Length/2)-1; i++)
     {
       if (isFull[i]==false)
       {
