@@ -12,11 +12,8 @@ public class FishingGameController : UdonSharpBehaviour
     private float timeStepRatio;
     public bool simulateGame; // whether or not to simulate the actual game or use the settings panel
     [Header("Fish variables")]
-    public float catchRate; // catch percentage per tick when fish is in catch range
-    public float escapeRate; // catch percentage decrease per tick when fish is not in catch range
-    public float fishMaxSpeed; // how fast the fish can move at max speed
-    public float fishAccel; // rate at which fish accelerates
-    public float minDistToTarget; // how close the fish needs to be to its target to pick a new target
+    public int fishType; // type of fish
+    public float difficulty; // difficulty from 0 to 1
     [Header("Player variables")]
     public float maxFallSpeed;
     public float maxSpeed; // max speed the player can move the area to catch the fish
@@ -51,6 +48,8 @@ public class FishingGameController : UdonSharpBehaviour
     private Transform initialPosOfRod; // initialPos of rod when swing event occured
     private FishData fishData;
 
+    private float[] hi;
+
     float gameToUICoords(float gameCoords)
     {
         return -(gameCoords * backgroundUI.rect.width/boardSize - backgroundUI.rect.width/2);
@@ -63,7 +62,7 @@ public class FishingGameController : UdonSharpBehaviour
         timeStepRatio = Time.fixedDeltaTime/DEFAULT_TIME_STEP;
         bounds = boardSize/(backgroundUI.rect.width/playerUI.rect.width) * boundAdjustment;
         fish = GetComponentInChildren<Fish>();
-        fish.CreateFish(catchRate * timeStepRatio, escapeRate * timeStepRatio, fishMaxSpeed * timeStepRatio, fishAccel * timeStepRatio, minDistToTarget);
+        fish.CreateFish(fishType, difficulty, timeStepRatio);
         fish.SetPosition(bounds);
         fish.SetTarget(bounds);
         player = GetComponentInChildren<Player>();
@@ -105,7 +104,7 @@ public class FishingGameController : UdonSharpBehaviour
                     canvas.SetActive(gameActive);
                 }
             }
-            if(fish.GetPercentageCaught() > 0.2 && hasSwungRod == false)
+            if(fish.GetPercentageCaught() > 0.5 && hasSwungRod == false)
             {
                 if(swingIndicatorSpawned == false)
                 {

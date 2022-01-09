@@ -9,7 +9,6 @@ public class RodContainerController : UdonSharpBehaviour
     [Header("Required GameObjects")]
     public VRC_Pickup leverHandlePickup;
     public VRC_Pickup rodPickup;
-    public SettingsPanelController settingsPanelController;
     public LineController lineController;
     public FishingGameController fishingGameController;
     [UdonSynced] private bool isActive;
@@ -54,13 +53,6 @@ public class RodContainerController : UdonSharpBehaviour
         SetRodActive(true);
         leverHandlePickup.pickupable = true;
         rodPickup.pickupable = true;
-        fishingGameController.maxSpeed = settingsPanelController.maxSpeedSlider.value;
-        fishingGameController.maxFallSpeed = settingsPanelController.maxFallSpeedSlider.value;
-        fishingGameController.accel = settingsPanelController.accelSlider.value;
-        fishingGameController.gravity = settingsPanelController.gravitySlider.value;
-        fishingGameController.bounce = settingsPanelController.bounceSlider.value;
-        fishingGameController.boundAdjustment = settingsPanelController.boundAdjustmentSlider.value;
-        fishingGameController.Start();
     }
     public void EXUR_Finalize()
     {

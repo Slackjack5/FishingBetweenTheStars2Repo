@@ -547,7 +547,7 @@ using VRC.Udon;
             AcquireObjectWithTag();
         }
 
-        public GameObject AquireGameObjectWithTag(string tag)
+        public GameObject AcquireGameObjectWithTag(string tag)
         {
             if (tag == null)
             {

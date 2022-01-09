@@ -94,7 +94,7 @@ public class SettingsPanelController : UdonSharpBehaviour
 
     public void CreateRod()
     {
-        GameObject existingObject = rodManager.AquireGameObjectWithTag(""+Networking.LocalPlayer.playerId);
+        GameObject existingObject = rodManager.AcquireGameObjectWithTag(""+Networking.LocalPlayer.playerId);
         if(existingObject != null)
         {
             existingObject.GetComponent<RodContainerController>().ResetRod();
