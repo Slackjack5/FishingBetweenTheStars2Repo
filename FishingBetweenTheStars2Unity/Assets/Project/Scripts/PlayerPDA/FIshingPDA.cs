@@ -8,7 +8,8 @@ public class FIshingPDA : UdonSharpBehaviour
 {
   private VRCPlayerApi localPlayer;
   public GameObject headOrb;
-  public GameObject handCollider;
+  public GameObject rightHandCollider;
+  public GameObject leftHandCollider;
   void Start()
     {
     localPlayer = Networking.LocalPlayer;
@@ -19,12 +20,17 @@ public class FIshingPDA : UdonSharpBehaviour
     //Update our Head Position
     Vector3 headPosition = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position;
     Quaternion headRotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
-    Vector3 handPosition = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-    Quaternion handRotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+    Vector3 rightHandPosition = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+    Quaternion rightHandRotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+    Vector3 leftHandPosition = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
+    Quaternion leftHandRotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
     headOrb.transform.position = headPosition;
     headOrb.transform.rotation = headRotation;
-    handCollider.transform.position = handPosition;
-    handCollider.transform.rotation = handRotation;
+    rightHandCollider.transform.position = rightHandPosition;
+    rightHandCollider.transform.rotation = rightHandRotation;
+    leftHandCollider.transform.position = leftHandPosition;
+    leftHandCollider.transform.rotation = leftHandRotation;
+    
   }
 
 
