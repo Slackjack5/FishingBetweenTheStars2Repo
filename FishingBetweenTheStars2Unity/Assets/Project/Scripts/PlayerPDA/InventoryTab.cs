@@ -18,6 +18,18 @@ public class InventoryTab : UdonSharpBehaviour
   public Sprite emptySlot;
   public Sprite[] SlotRarities;
 
+  private void FixedUpdate()
+  {
+    
+    for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
+    {
+      if (isFull[i] == false)
+      {
+        AddToBag(Random.Range(0, 24));
+      }
+    }
+    
+  }
   public void AddToBag(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
   {
     for (int i = 0; i < (inventorySlots.Length/2)-1; i++)
