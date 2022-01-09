@@ -11,11 +11,21 @@ public class HookController : UdonSharpBehaviour
     {
         line = GetComponentInParent<LineController>();
     }
-    void OnCollisionEnter(Collision collision)
+
+    void FixedUpdate()
+    {
+        if(transform.position.y < -10)
+        {
+            line.ResetLine();
+            line.SetCast(false);
+        }
+    }
+
+    void OnTriggerEnter(Collider collider)
     {
         if(line.GetCast() && !line.GetWater())
         {
-            if(collision.gameObject.name == "Water") 
+            if(collider.gameObject.name == "Water") 
             {
                 line.SetInWater(true);
             }
