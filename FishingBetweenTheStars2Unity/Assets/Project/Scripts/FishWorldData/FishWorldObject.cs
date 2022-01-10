@@ -10,6 +10,7 @@ public class FishWorldObject : UdonSharpBehaviour
     public InventoryTab inventory;
     private FishData fishData;
     private bool usedAsBait;
+    private bool usedAsCash;
     [UdonSynced] private int spriteId;
 
     void FixedUpdate()
@@ -39,12 +40,23 @@ public class FishWorldObject : UdonSharpBehaviour
         usedAsBait = true;
     }
 
-    public override void OnDrop()
+    public void UsedAsCash()
+    {
+      usedAsBait = true;
+    }
+
+  public override void OnDrop()
     {
         if(!usedAsBait)
         {
             inventory.AddToBag(spriteId);
             transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+        }
+        else if (!usedAsCash)
+        {
+          inventory.AddMoney(spriteId);
+          transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+          Debug.Log("Sold Fish");
         }
     }
 

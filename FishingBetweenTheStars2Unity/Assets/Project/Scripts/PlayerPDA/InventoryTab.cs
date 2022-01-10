@@ -19,6 +19,18 @@ public class InventoryTab : UdonSharpBehaviour
   public Sprite[] SlotRarities;
   public Manager fishPool; // pool of fish to spawn in when items removed from inventory to put on hook
 
+
+  private void Start()
+  {
+    for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
+    {
+      if (isFull[i] == false)
+      {
+        AddToBag(Random.Range(1, 24));
+      }
+    }
+
+  }
   private void FixedUpdate()
   {
     
@@ -118,6 +130,12 @@ public class InventoryTab : UdonSharpBehaviour
     FishId[slot] = 0;     //Make slot data our Empty Slot
     GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
     Child.GetComponent<Image>().sprite = emptySlot;
+  }
+
+  public void AddMoney(int id)
+  {
+    GameObject Parent = transform.parent.gameObject;
+    Parent.GetComponent<PlayerController>().playerCash += fishDictionary.getFishData(id).getFishValue();
   }
 
 
