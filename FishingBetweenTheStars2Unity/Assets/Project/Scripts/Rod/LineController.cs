@@ -106,6 +106,12 @@ public class LineController : UdonSharpBehaviour
         {
             SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "CaughtFish");
         }
+        if(inWater)
+        {
+            fishingGameController.AddFishOnLine(null); // remove fish on line if you break the line mid-game
+            Destroy(hook.GetComponent<HookController>().GetFishSprite());
+            hook.GetComponent<HookController>().SetFishSprite(null);
+        }
         fishingGameController.Start();
         hookRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         lineRenderer.enabled = false;
