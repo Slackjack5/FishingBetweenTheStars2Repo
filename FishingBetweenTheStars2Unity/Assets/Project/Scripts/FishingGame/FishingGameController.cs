@@ -94,7 +94,7 @@ public class FishingGameController : UdonSharpBehaviour
                     {
                         if(fishOnLine != null)
                         {
-                            fishData = fishDictionary.rollFish(fishDictionary.getTierFromPower(fishOnLine.getFishValue()));
+                            fishData = fishDictionary.rollFish(fishDictionary.getTierFromPower(fishOnLine.getFishPower()));
                         }
                         else
                         {
