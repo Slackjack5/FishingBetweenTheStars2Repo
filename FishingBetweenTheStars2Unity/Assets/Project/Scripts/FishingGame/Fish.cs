@@ -53,7 +53,7 @@ public class Fish : UdonSharpBehaviour
         this.erraticness = erraticness;
         target = 0;
         position = 0;
-        percentageCaught = 0.2f;
+        percentageCaught = 0.3f;
     }
 
     // necessary to tell fish to be in bounds at the start of the game

@@ -14,6 +14,7 @@ public class RodSpawnerController : UdonSharpBehaviour
   {
     transform.position = resetPoint.transform.position;
     transform.rotation = resetPoint.transform.rotation;
+    OnDrop();
   }
   public override void OnPickup()
     {

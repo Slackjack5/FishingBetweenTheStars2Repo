@@ -35,6 +35,7 @@ public class FishingGameController : UdonSharpBehaviour
     public GameObject newRod; // rod prefab for swinging
     public GameObject swingIndicator; // swing indicator prefab
     public FishDictionary fishDictionary; // fish dictionary script
+    public InventoryTab inventory;
 
     private bool gameActive; // is the game active?
     private Fish fish; // the fish being caught in this game
@@ -47,9 +48,7 @@ public class FishingGameController : UdonSharpBehaviour
     private GameObject currentSwingIndicator;
     private Transform initialPosOfRod; // initialPos of rod when swing event occured
     private FishData fishData;
-
-    private float[] hi;
-
+    private FishData fishOnLine;
     float gameToUICoords(float gameCoords)
     {
         return -(gameCoords * backgroundUI.rect.width/boardSize - backgroundUI.rect.width/2);
@@ -93,7 +92,15 @@ public class FishingGameController : UdonSharpBehaviour
                 {
                     if(Random.value > 0.995)
                     {
-                        fishData = fishDictionary.rollFish(0);
+                        if(fishOnLine != null)
+                        {
+                            fishData = fishDictionary.rollFish(fishDictionary.getTierFromPower(fishOnLine.getFishValue()));
+                        }
+                        else
+                        {
+                            fishData = fishDictionary.rollFish(0);
+                        }
+                        fish.CreateFish(fishData.getFishType(), fishData.getFishDifficulty(), timeStepRatio);
                         gameActive = true;
                         canvas.SetActive(gameActive);
                     }
@@ -104,40 +111,54 @@ public class FishingGameController : UdonSharpBehaviour
                     canvas.SetActive(gameActive);
                 }
             }
-            if(fish.GetPercentageCaught() > 0.5 && hasSwungRod == false)
-            {
-                if(swingIndicatorSpawned == false)
-                {
-                    currentSwingIndicator = VRCInstantiate(swingIndicator);
-                    currentSwingIndicator.transform.position = line.transform.position + new Vector3(Random.value * swingRadius + swingRadius/5, Random.value * swingRadius + swingRadius/5, Random.value * swingRadius + swingRadius/5);
-                    swingIndicatorSpawned = true;
-                }
-                if(currentSwingIndicator.GetComponent<SwingIndicatorController>().GetCollidedWithLine())
-                {
-                    hasSwungRod = true;
-                    Destroy(currentSwingIndicator);
-                }
-            }
             else
             {
-                fish.Move(boardSize, bounds);
-                player.Move(boardSize, bounds, line.GetReeling());
-                if(Mathf.Abs(fish.GetPosition() - player.GetPosition()) < bounds)
+                if(fish.GetPercentageCaught() > 0.5 && hasSwungRod == false)
                 {
-                    fish.AddCaught();
+                    if(swingIndicatorSpawned == false)
+                    {
+                        currentSwingIndicator = VRCInstantiate(swingIndicator);
+                        currentSwingIndicator.transform.position = line.transform.position + new Vector3(Random.value * swingRadius + swingRadius/5, Random.value * swingRadius + swingRadius/5, Random.value * swingRadius + swingRadius/5);
+                        swingIndicatorSpawned = true;
+                    }
+                    if(currentSwingIndicator.GetComponent<SwingIndicatorController>().GetCollidedWithLine())
+                    {
+                        hasSwungRod = true;
+                        Destroy(currentSwingIndicator);
+                    }
                 }
                 else
                 {
-                    fish.AddEscape();
+                    fish.Move(boardSize, bounds);
+                    player.Move(boardSize, bounds, line.GetReeling());
+
+                    if(Mathf.Abs(fish.GetPosition() - player.GetPosition()) < bounds)
+                    {
+                        fish.AddCaught();
+                    }
+                    else
+                    {
+                        fish.AddEscape();
+                    }
+
+                    if(fish.GetPercentageCaught() == 1)
+                    {  
+                        inventory.AddToBag(fishData.getFishId());
+                        line.ResetLine();
+                        fishOnLine = null;
+                        Start();
+                        return;
+                    }
+                    if(fish.GetPercentageCaught() == 0)
+                    {
+                        line.ResetLine();
+                        fishOnLine = null;
+                        Start();
+                        return;
+                    }
                 }
-                if(fish.GetPercentageCaught() == 1)
-                {
-                    line.ResetLine();
-                    Start();
-                    return;
-                }
+                UpdateUI();
             }
-            UpdateUI();
         }
     }
 
@@ -171,5 +192,10 @@ public class FishingGameController : UdonSharpBehaviour
     public FishData GetFishData()
     {
         return fishData;
+    }
+
+    public void AddFishOnLine(FishData fish)
+    {
+        fishOnLine = fish;
     }
 }

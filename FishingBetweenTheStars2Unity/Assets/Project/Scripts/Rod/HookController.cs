@@ -6,6 +6,7 @@ using VRC.Udon;
 
 public class HookController : UdonSharpBehaviour
 {
+    public FishingGameController gameController;
     private LineController line;
     void Start()
     {
@@ -14,7 +15,7 @@ public class HookController : UdonSharpBehaviour
 
     void FixedUpdate()
     {
-        if(transform.position.y < -10)
+        if(transform.position.y < -5)
         {
             line.ResetLine();
             line.SetCast(false);
@@ -33,6 +34,15 @@ public class HookController : UdonSharpBehaviour
             {
                 line.ResetLine();
                 line.SetCast(false);
+            }
+        }
+        else if(!line.GetCast())
+        {
+            if(collider.gameObject.name == "FishWorldObject" && Networking.GetOwner(collider.gameObject).playerId == Networking.LocalPlayer.playerId)
+            {
+                collider.GetComponent<FishWorldObject>().UsedAsBait();
+                gameController.AddFishOnLine(collider.GetComponent<FishWorldObject>().GetFishData());
+                collider.transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
             }
         }
     }

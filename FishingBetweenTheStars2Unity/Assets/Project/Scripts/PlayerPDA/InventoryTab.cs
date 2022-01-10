@@ -17,22 +17,24 @@ public class InventoryTab : UdonSharpBehaviour
   public Sprite unknownFish;
   public Sprite emptySlot;
   public Sprite[] SlotRarities;
+  public Manager fishPool; // pool of fish to spawn in when items removed from inventory to put on hook
 
   private void FixedUpdate()
   {
     
-    for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
+    /*for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
     {
       if (isFull[i] == false)
       {
         AddToBag(Random.Range(0, 24));
       }
-    }
+    }*/
     
   }
   public void AddToBag(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
   {
-    for (int i = 0; i < (inventorySlots.Length/2)-1; i++)
+    slotIdSelected = -1;
+    for (int i = 0; i < inventorySlots.Length - 1; i++)
     {
       if (isFull[i]==false)
       {
@@ -80,9 +82,31 @@ public class InventoryTab : UdonSharpBehaviour
     {
       if(inventorySlots[i]==slotObjectSelected) //When we find the gameobject that matches the game object in the slot, run the code
       {
-        slotIdSelected = i;
-        UpdateMainPanel(FishId[slotIdSelected]); //Update our main Panel
-        break;
+        if(slotIdSelected == i && FishId[i] != 0)
+        {
+          // spawn fish object
+          GameObject fishWorldObject = fishPool.AcquireGameObjectWithTag(""+Networking.LocalPlayer.playerId);
+          if (fishWorldObject != null)
+          {
+            fishWorldObject.GetComponent<FishWorldObjectContainer>().EXUR_Reinitialize();
+          }
+          else
+          {
+            fishPool.AcquireObjectForEachPlayer();
+            fishWorldObject = fishPool.AcquireGameObjectWithTag("" + Networking.LocalPlayer.playerId);
+          }
+          fishWorldObject.GetComponentInChildren<FishWorldObject>().SetObjectById(FishId[i]);
+          fishWorldObject.transform.GetChild(0).position = gameObject.transform.position;
+          fishWorldObject.transform.GetChild(0).rotation = gameObject.transform.rotation;
+          RemoveItem(i);
+          return;
+        }
+        else
+        {
+          slotIdSelected = i;
+          UpdateMainPanel(FishId[slotIdSelected]); //Update our main Panel
+          break;
+        }
       }
     }
   }
@@ -170,5 +194,10 @@ public class InventoryTab : UdonSharpBehaviour
       inventorySlots[inventorySlots.Length - 1].GetComponent<Image>().sprite = SlotRarities[0];
       Child.GetComponent<TMPro.TextMeshProUGUI>().text = ""; //Empty Slot
     }
+  }
+
+  public void ClosePanel()
+  {
+    transform.position = new Vector3(999999, 999999, 999999);
   }
 }
