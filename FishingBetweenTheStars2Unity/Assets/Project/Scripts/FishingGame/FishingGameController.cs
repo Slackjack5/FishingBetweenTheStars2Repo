@@ -143,7 +143,7 @@ public class FishingGameController : UdonSharpBehaviour
 
                     if(fish.GetPercentageCaught() == 1)
                     {  
-                        inventory.AddToBag(fishData.getFishId());
+                        inventory.AddToBag(fishData.getFishId() + 1);
                         line.ResetLine();
                         fishOnLine = null;
                         Start();
