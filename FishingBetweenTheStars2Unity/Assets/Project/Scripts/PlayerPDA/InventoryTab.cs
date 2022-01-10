@@ -18,31 +18,23 @@ public class InventoryTab : UdonSharpBehaviour
   public Sprite emptySlot;
   public Sprite[] SlotRarities;
   public Manager fishPool; // pool of fish to spawn in when items removed from inventory to put on hook
+  private int[] slotItemQuantity;
+  public int Tab;
 
 
   private void Start()
   {
+    slotItemQuantity=new int[3];
     for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
     {
       if (isFull[i] == false)
       {
-        AddToBag(Random.Range(1, 24));
+        AddWorms(Random.Range(35,35));
       }
     }
+    
+  }
 
-  }
-  private void FixedUpdate()
-  {
-    
-    /*for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
-    {
-      if (isFull[i] == false)
-      {
-        AddToBag(Random.Range(0, 24));
-      }
-    }*/
-    
-  }
   public void AddToBag(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
   {
     slotIdSelected = -1;
@@ -88,7 +80,25 @@ public class InventoryTab : UdonSharpBehaviour
     }
   }
 
-  public void ItemSelected()
+  public void AddWorms(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
+  {
+    if(Tab==1)
+    {
+      for (int i = 0; i < inventorySlots.Length - 1; i++)
+      {
+        if (isFull[i] == false)
+        {
+          slotItemQuantity[i] = 10;
+          AddToBag(Id);
+          break;
+        }
+      }
+    }
+  }
+
+  
+
+    public void ItemSelected()
   {
     for (int i = 0; i < inventorySlots.Length - 1; i++)  //Run Through All our Slots
     {
@@ -125,11 +135,33 @@ public class InventoryTab : UdonSharpBehaviour
 
   public void RemoveItem(int slot) //Type Remove and Give a the slot you want to clear
   {
-    inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
-    isFull[slot] = false;    //Show that the slot is now Open
-    FishId[slot] = 0;     //Make slot data our Empty Slot
-    GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
-    Child.GetComponent<Image>().sprite = emptySlot;
+    //If on Tab 1 (Inventory Tab)
+    if(transform.parent.GetComponent<FIshingPDA>().currentTab==0)
+    {
+      inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
+      isFull[slot] = false;    //Show that the slot is now Open
+      FishId[slot] = 0;     //Make slot data our Empty Slot
+      GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
+      Child.GetComponent<Image>().sprite = emptySlot;
+    }
+    else if(transform.parent.GetComponent<FIshingPDA>().currentTab == 1) //If on Tab 2 (Worm Tab
+    {
+      if(slotItemQuantity[slot]>0)
+      {
+        slotItemQuantity[slot] -= 1;
+        GameObject Child = inventorySlots[slot].transform.GetChild(1).gameObject;
+        Child.GetComponent<TMPro.TextMeshProUGUI>().text = slotItemQuantity[slot].ToString();
+      }
+      else
+      {
+        inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
+        isFull[slot] = false;    //Show that the slot is now Open
+        FishId[slot] = 0;     //Make slot data our Empty Slot
+        GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
+        Child.GetComponent<Image>().sprite = emptySlot;
+      }
+    }
+
   }
 
   public void AddMoney(int id)

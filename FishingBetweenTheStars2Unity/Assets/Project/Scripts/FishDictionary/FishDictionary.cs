@@ -11,7 +11,7 @@ public class FishDictionary : UdonSharpBehaviour
   public GameObject fishTemplate;
   void Start()
   {
-    FishArray = new FishData[35];
+    FishArray = new FishData[38];
     BuildFishDictionary();
   }
 
@@ -77,7 +77,11 @@ public class FishDictionary : UdonSharpBehaviour
    FishArray[32].SetFishData(31, spriteArray[32], "Jar of Light", "Its light is enough to drive a man mad...", 3, 5, 0, .10f, 0, 9999, 0, 0.5f);
    FishArray[33].SetFishData(32, spriteArray[33], "Statue of Blinding Faith", "A statue whose power is felt through even the most unholy of nights..", 0, 5, 5000, .30f, 0, 9999, 0, 0.5f);
    FishArray[34].SetFishData(33, spriteArray[34], "Void Crate", "A crate with treasure beyond ones comprehension", 3, 5, 10000, .05f, 0, 9999, 0, 0.5f);
-   
+
+    //Tier 11 - Bait(ID , Name, Description, Rarity, Tier, Value, Base Chance, Power, Favorite Fish)
+    FishArray[35].SetFishData(35, spriteArray[35], "Regular Worms", "When put on Rod, Gives Power", 0, 11, 0, .2f, 50, 9999, 0, 0.5f);
+    FishArray[36].SetFishData(36, spriteArray[34], "Cosmic Worms", "When put on Rod, Gives Power", 1, 11, 0, .25f, 100, 9999, 0, 0.5f);
+    FishArray[37].SetFishData(37, spriteArray[36], "Void Star Fish", "When put on Rod, Gives Power", 2, 11, 0, .3f, 175, 9999, 0, 0.5f);
   }
 
   public FishData getFishData(int ID)

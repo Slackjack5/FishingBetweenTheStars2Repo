@@ -18,4 +18,12 @@ public class SellingStation : UdonSharpBehaviour
       collider.GetComponent<FishWorldObject>().UsedAsCash();
     }
   }
+
+  private void OnTriggerExit(Collider collider)
+  {
+    if (collider.gameObject.name == "FishWorldObject" && Networking.GetOwner(collider.gameObject).playerId == Networking.LocalPlayer.playerId)
+    {
+      collider.GetComponent<FishWorldObject>().UsedAsCash();
+    }
+  }
 }

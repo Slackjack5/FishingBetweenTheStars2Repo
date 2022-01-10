@@ -10,6 +10,9 @@ public class FIshingPDA : UdonSharpBehaviour
   public GameObject headOrb;
   public GameObject rightHandCollider;
   public GameObject leftHandCollider;
+
+  public int currentTab;
+  public int maxTab;
   void Start()
     {
     localPlayer = Networking.LocalPlayer;
@@ -33,5 +36,44 @@ public class FIshingPDA : UdonSharpBehaviour
     
   }
 
+  private void FixedUpdate()
+  {
+    
+  }
+
+  public void NextTab()
+  {
+    if (currentTab < maxTab)
+    {
+      currentTab += 1;
+      UpdateTab();
+    }
+    else
+    {
+      currentTab = 0;
+      UpdateTab();
+    }
+  }
+
+  public void UpdateTab()
+  {
+    Debug.Log("Updating Tab");
+    if(currentTab==0)
+    {
+      GameObject Child = gameObject.transform.GetChild(0).gameObject;
+      Child.SetActive(true);
+      //Set other children as inactive
+      Child = gameObject.transform.GetChild(1).gameObject;
+      Child.SetActive(false);
+    }
+    else if(currentTab == 1)
+    {
+      GameObject Child = gameObject.transform.GetChild(1).gameObject;
+      Child.SetActive(true);
+      //Set other children as inactive
+      Child = gameObject.transform.GetChild(0).gameObject;
+      Child.SetActive(false);
+    }
+  }
 
 }

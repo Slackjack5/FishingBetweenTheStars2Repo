@@ -42,23 +42,36 @@ public class FishWorldObject : UdonSharpBehaviour
 
     public void UsedAsCash()
     {
-      usedAsBait = true;
+      if(!usedAsCash)
+      {
+      usedAsCash = true;
+      }
+      else { usedAsCash = false; }
+      
     }
 
   public override void OnDrop()
-    {
-        if(!usedAsBait)
+   {
+        if(!usedAsBait && !usedAsCash)
         {
             inventory.AddToBag(spriteId);
             transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
         }
-        else if (!usedAsCash)
+        else if (usedAsCash)
         {
-          inventory.AddMoney(spriteId);
-          transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
-          Debug.Log("Sold Fish");
+            inventory.AddMoney(spriteId);
+            transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+            usedAsCash = false;
+            Debug.Log("Sold Fish");
         }
-    }
+        else
+        {
+          inventory.AddToBag(spriteId);
+          transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+        }
+
+
+  }
 
     public override void OnDeserialization()
     {
