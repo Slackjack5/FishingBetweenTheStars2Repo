@@ -40,7 +40,7 @@ public class FishWorldObject : UdonSharpBehaviour
         usedAsBait = true;
     }
 
-    public void UsedAsCash()
+    public void UsedAsCash() //If inside the Sell Machine, Show that its being used for Cash
     {
       if(!usedAsCash)
       {
@@ -50,7 +50,7 @@ public class FishWorldObject : UdonSharpBehaviour
       
     }
 
-  public override void OnDrop()
+  public override void OnDrop() //When we drop the fish, if its being used for cash sell it, if not use it as bait?
    {
         if(!usedAsBait && !usedAsCash)
         {

@@ -80,7 +80,7 @@ public class InventoryTab : UdonSharpBehaviour
     }
   }
 
-  public void AddWorms(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
+  public void AddWorms(int Id) //Type AddtoWorms and Give a fish ID, Will Automatically be tossed into the Inventory tab 2
   {
     if(Tab==1)
     {
