@@ -91,12 +91,15 @@ public class Fish : UdonSharpBehaviour
 
     public void PickNextTarget(float boardSize, float bounds)
     {
-        target = Random.value * ((float)boardSize - (float)bounds) + (float)bounds;
-        // pick a target within a certain range of the fish based on its speed
-        // this will be a constant because it probably should be
-        while(Mathf.Abs(position - target) > maxDist || Mathf.Abs(position - target) < minDist)
+        float actualMaxDist = Mathf.Max(maxDist, boardSize - bounds);
+        target = Mathf.Max(Mathf.Min(Random.value * (actualMaxDist * 2) + position - actualMaxDist, boardSize - bounds), bounds);
+        if(target < position && Mathf.Abs(target - position) < minDist && target != bounds)
         {
-            target = Random.value * ((float)boardSize - (float)bounds) + (float)bounds;
+            target -= minDist;
+        }
+        if(target > position && Mathf.Abs(target - position) < minDist && target != boardSize - bounds)
+        {
+            target += minDist;
         }
     }
 

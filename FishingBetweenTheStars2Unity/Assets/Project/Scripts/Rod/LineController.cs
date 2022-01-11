@@ -160,7 +160,7 @@ public class LineController : UdonSharpBehaviour
 
     public override void OnDeserialization()
     {
-        if(Networking.GetOwner(gameObject) != Networking.LocalPlayer)
+        if(Networking.GetOwner(gameObject) != Networking.LocalPlayer && updateHook)
         {
             hook.transform.position = hookPos;
             lineRenderer.enabled = showWire;

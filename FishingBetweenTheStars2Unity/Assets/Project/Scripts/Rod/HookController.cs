@@ -17,16 +17,11 @@ public class HookController : UdonSharpBehaviour
 
     void FixedUpdate()
     {
-        if(transform.position.y < -2 && line.GetCast())
-        {
-            line.SetInWater(true);
-        }
-
-        /*if(transform.position.y < -5 && line.GetCast())
+        if(transform.position.y < -5 && line.GetCast())
         {
             line.ResetLine();
             line.SetCast(false);
-        }*/
+        }
 
         if(line.GetCast() && !line.GetWater() && currentFishSprite != null)
         {
@@ -40,7 +35,7 @@ public class HookController : UdonSharpBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        /*if(line.GetCast() && !line.GetWater())
+        if(line.GetCast() && !line.GetWater())
         {
             if(collider.gameObject.name == "Water") 
             {
@@ -51,7 +46,7 @@ public class HookController : UdonSharpBehaviour
                 line.ResetLine();
                 line.SetCast(false);
             }
-        }*/
+        }
         if(!line.GetCast())
         {
             if(collider.gameObject.name == "FishWorldObject" && Networking.GetOwner(collider.gameObject).playerId == Networking.LocalPlayer.playerId)
@@ -67,14 +62,14 @@ public class HookController : UdonSharpBehaviour
         }
     }
 
-    /*void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if(!line.GetWater())
         {
             line.ResetLine();
             line.SetCast(false);
         }
-    }*/
+    }
 
     public GameObject GetFishSprite()
     {

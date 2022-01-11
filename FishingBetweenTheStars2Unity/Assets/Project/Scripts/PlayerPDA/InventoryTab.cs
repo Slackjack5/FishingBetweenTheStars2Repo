@@ -35,7 +35,7 @@ public class InventoryTab : UdonSharpBehaviour
     slotIdSelected = -1;
     int startVal = 0;
     int endVal = 10;
-    if(Id >= 10)
+    if(Id >= fishDictionary.WORM_OFFSET)
     {
       startVal = 10;
       endVal = 13;

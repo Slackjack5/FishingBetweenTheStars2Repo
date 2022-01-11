@@ -92,6 +92,7 @@ public class FishingGameController : UdonSharpBehaviour
                 {
                     if(Random.value > 0.995)
                     {
+                        Debug.Log("hi");
                         if(fishOnLine != null)
                         {
                             fishData = fishDictionary.rollFish(fishDictionary.getTierFromPower(fishOnLine.getFishPower()));
@@ -103,6 +104,7 @@ public class FishingGameController : UdonSharpBehaviour
                         fish.CreateFish(fishData.getFishType(), fishData.getFishDifficulty(), timeStepRatio);
                         gameActive = true;
                         canvas.SetActive(gameActive);
+                        Debug.Log("hi2");
                     }
                 }
                 else
