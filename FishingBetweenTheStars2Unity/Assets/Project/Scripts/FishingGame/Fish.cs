@@ -8,7 +8,7 @@ public class Fish : UdonSharpBehaviour
 {
     private int fishType; // 0 mixed, 1 sinker, 2 floater, 3 dart
     private float difficulty; // percentage val from 0 to 1
-    private const float DEFAULT_CATCH_RATE = 0.002f;
+    private const float DEFAULT_CATCH_RATE = 0.0015f;
     private float[] mixed = {0.03f, 0.03f, 0.002f};
     private float[] sinker = {0.015f, 0.03f, 0.002f};
     private float[] floater = {0.03f, 0.015f, 0.002f};
@@ -55,7 +55,7 @@ public class Fish : UdonSharpBehaviour
         this.erraticness = erraticness;
         target = 0;
         position = 0;
-        percentageCaught = 0.3f;
+        percentageCaught = 0.15f;
     }
 
     // necessary to tell fish to be in bounds at the start of the game

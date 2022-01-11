@@ -12,28 +12,28 @@ public class BuyingPanelController : UdonSharpBehaviour
     public void BuyRegularWorm()
     {
         manager.AcquireObjectForEachPlayer();
-        if(player.GetCash() >= 50)
+        if(player.GetCash() >= 5)
         {
             inventory.AddWorms(35, 1);
-            player.ChangeCash(-50);
+            player.ChangeCash(-5);
         }
     }
     
     public void BuyCosmicWorm()
     {
-        if(player.GetCash() >= 350)
+        if(player.GetCash() >= 35)
         {
             inventory.AddWorms(36, 1);
-            player.ChangeCash(-350);
+            player.ChangeCash(-35);
         }
     }
 
     public void BuyVoidStarfish()
     {
-        if(player.GetCash() >= 750)
+        if(player.GetCash() >= 75)
         {
             inventory.AddWorms(37, 1);
-            player.ChangeCash(-750);
+            player.ChangeCash(-75);
         }
     }
 }
