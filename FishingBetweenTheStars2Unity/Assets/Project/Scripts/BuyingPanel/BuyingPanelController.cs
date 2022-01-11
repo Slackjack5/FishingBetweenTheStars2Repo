@@ -8,10 +8,8 @@ public class BuyingPanelController : UdonSharpBehaviour
 {
     public InventoryTab inventory;
     public PlayerController player;
-    public Manager manager;
     public void BuyRegularWorm()
     {
-        manager.AcquireObjectForEachPlayer();
         if(player.GetCash() >= 5)
         {
             inventory.AddWorms(35, 1);
