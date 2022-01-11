@@ -36,7 +36,7 @@ public class FishDictionary : UdonSharpBehaviour
    FishArray[1].SetFishData(0,spriteArray[1],"Action Figure", "Very Pog Pepe Action Figure",1, 0, 75, .2f, 0,9999, 0, 0.5f);
    FishArray[2].SetFishData(1,spriteArray[2], "Tin Can", "Wow! They really have it! Canned Bread!", 0, 0, 50, .25f, 0, 9999, 0, 0.5f);
    FishArray[3].SetFishData(2,spriteArray[3], "Squeaky Boots", "Who knew fish had such great taste in fashion?!", 0, 0, 50, .3f, 0, 9999, 0, 0.5f);
-   FishArray[4].SetFishData(3,spriteArray[4], "Worm Bundle", "A Bundle of 3 Worms", 1, 0, 0, .2f, 0, 9999, 0, 0.5f);
+   FishArray[4].SetFishData(3,spriteArray[4], "Worm Bundle", "A Bundle of 3 Worms", 1, 10, 0, .2f, 0, 9999, 0, 0.5f); // don't spawn this one atm
    FishArray[5].SetFishData(4,spriteArray[5], "Wooden Crate", "A crate found in poor condition. Holds various trinkets that are worth a pretty penny!", 3, 0, 200, .05f, 0, 9999, 0, 0.5f);
     
    //Tier 1 (ID , Name, Description, Rarity, Tier, Value, Base Chance, Power, Favorite Fish)

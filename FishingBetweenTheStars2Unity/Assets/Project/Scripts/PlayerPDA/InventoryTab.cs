@@ -34,11 +34,13 @@ public class InventoryTab : UdonSharpBehaviour
   {
     slotIdSelected = -1;
     int startVal = 0;
+    int endVal = 10;
     if(Id >= 10)
     {
       startVal = 10;
+      endVal = 13;
     }
-    for (int i = startVal; i < inventorySlots.Length - 1; i++)
+    for (int i = startVal; i < endVal; i++)
     {
       if (isFull[i]==false)
       {
@@ -297,6 +299,6 @@ public class InventoryTab : UdonSharpBehaviour
 
   public void ClosePanel()
   {
-    transform.position = new Vector3(999999, 999999, 999999);
+    transform.parent.position = new Vector3(999999, 999999, 999999);
   }
 }

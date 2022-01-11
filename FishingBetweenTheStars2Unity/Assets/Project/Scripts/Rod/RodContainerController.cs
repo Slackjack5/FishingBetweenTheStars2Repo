@@ -60,4 +60,9 @@ public class RodContainerController : UdonSharpBehaviour
         rodPickup.pickupable = false;
         ResetRod();
     }
+
+    public void EXUR_RetrievedFromUsing()
+    {
+        EXUR_Finalize();
+    }
 }

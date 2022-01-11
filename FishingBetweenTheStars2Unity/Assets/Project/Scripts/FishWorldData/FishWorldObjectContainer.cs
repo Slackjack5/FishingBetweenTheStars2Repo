@@ -26,6 +26,11 @@ public class FishWorldObjectContainer : UdonSharpBehaviour
         transform.GetChild(0).gameObject.SetActive(isActive);
     }
 
+    public void EXUR_RetrievedFromUsing()
+    {
+        EXUR_Finalize();
+    }
+
     public override void OnDeserialization()
     {
         transform.GetChild(0).gameObject.SetActive(isActive);

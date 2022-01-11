@@ -24,9 +24,11 @@ public class Fish : UdonSharpBehaviour
     private const int TICKS_TO_MAX = 5000; // how many game ticks it should take to get max distance
     private float maxDist; // max dist ticks to go to target
     private float minDist; // min dist ticks to go to target
+    private float timeStep;
 
     public void CreateFish(int fishType, float difficulty, float timeStep)
     {
+        this.timeStep = timeStep;
         if(fishType == 0)
         {
             CreateFishPriv(mixed[0] * difficulty * timeStep, mixed[1] * difficulty * timeStep, mixed[2] * difficulty * timeStep);
@@ -69,13 +71,13 @@ public class Fish : UdonSharpBehaviour
 
     public void AddCaught()
     {
-        percentageCaught = Mathf.Min(1, percentageCaught + DEFAULT_CATCH_RATE);
+        percentageCaught = Mathf.Min(1, percentageCaught + DEFAULT_CATCH_RATE * timeStep);
     }
 
     public void AddEscape()
     {
-        percentageCaught = Mathf.Max(0, percentageCaught - DEFAULT_CATCH_RATE);
-    }
+        percentageCaught = Mathf.Max(0, percentageCaught - DEFAULT_CATCH_RATE * timeStep);
+    } 
 
     public float GetPercentageCaught()
     {
