@@ -94,7 +94,6 @@ public class FishWorldObject : UdonSharpBehaviour
         }
         else
         {
-          inventory.AddToBag(spriteId);
           transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
         }
 
