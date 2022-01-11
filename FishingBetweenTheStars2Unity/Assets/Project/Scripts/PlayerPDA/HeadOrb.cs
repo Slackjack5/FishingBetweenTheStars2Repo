@@ -16,6 +16,7 @@ public class HeadOrb : UdonSharpBehaviour
     //Set our Orb to Behind our Head
     transform.position = ResetPoint.transform.position;
     transform.rotation = ResetPoint.transform.rotation;
+    OnDrop();
   }
 
 

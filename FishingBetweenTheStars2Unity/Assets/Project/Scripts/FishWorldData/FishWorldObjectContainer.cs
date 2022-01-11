@@ -14,6 +14,7 @@ public class FishWorldObjectContainer : UdonSharpBehaviour
     public void EXUR_Reinitialize()
     {
         isActive = true;
+        transform.GetChild(0).gameObject.GetComponent<FishWorldObject>().Start();
         transform.GetChild(0).gameObject.SetActive(isActive);
         fishPickup.pickupable = true;
     }

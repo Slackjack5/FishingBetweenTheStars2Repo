@@ -11,7 +11,13 @@ public class FishWorldObject : UdonSharpBehaviour
     private FishData fishData;
     private bool usedAsBait;
     private bool usedAsCash;
+    private bool fishPickedUp;
     [UdonSynced] private int spriteId;
+
+    public void Start()
+    {
+        fishPickedUp = false;
+    }
 
     void FixedUpdate()
     {
@@ -25,8 +31,6 @@ public class FishWorldObject : UdonSharpBehaviour
     {
         spriteId = id;
         GetComponent<SpriteRenderer>().sprite = dictionary.getFishData(id).getFishSprite();
-        Debug.Log(spriteId);
-        Debug.Log(GetComponent<SpriteRenderer>().sprite);
         fishData = dictionary.getFishData(id);
     }
 
@@ -49,20 +53,44 @@ public class FishWorldObject : UdonSharpBehaviour
       else { usedAsCash = false; }
       
     }
+    public override void OnPickup()
+    {
+        fishPickedUp = true;
+    }
+
+    public bool GetPickedUp()
+    {
+        return fishPickedUp;
+    }
 
   public override void OnDrop() //When we drop the fish, if its being used for cash sell it, if not use it as bait?
    {
         if(!usedAsBait && !usedAsCash)
         {
-            inventory.AddToBag(spriteId);
-            transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+            if(spriteId >= dictionary.WORM_OFFSET)
+            {
+                inventory.AddWorms(spriteId, 1);
+                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+            }
+            else
+            {
+                inventory.AddToBag(spriteId);
+                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+            }
         }
         else if (usedAsCash)
         {
             inventory.AddMoney(spriteId);
-            transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
-            usedAsCash = false;
-            Debug.Log("Sold Fish");
+            if(spriteId >= dictionary.WORM_OFFSET)
+            {
+                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+                usedAsCash = false;
+            }
+            else
+            {
+                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+                usedAsCash = false;
+            }
         }
         else
         {

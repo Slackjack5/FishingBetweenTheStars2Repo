@@ -8,7 +8,6 @@ using TMPro;
 
 public class InventoryTab : UdonSharpBehaviour
 {
-  public bool[] isFull;
   public GameObject[] inventorySlots;
   public int[] FishId;
   public FishDictionary fishDictionary;
@@ -16,29 +15,30 @@ public class InventoryTab : UdonSharpBehaviour
   private int slotIdSelected;
   public Sprite unknownFish;
   public Sprite emptySlot;
+  public Sprite emptyBaitSlot;
   public Sprite[] SlotRarities;
+  public Sprite[] FishSlotRarities;
   public Manager fishPool; // pool of fish to spawn in when items removed from inventory to put on hook
   private int[] slotItemQuantity;
   public int Tab;
+  private bool[] isFull;
 
 
   private void Start()
   {
-    slotItemQuantity=new int[3];
-    for (int i = 0; i < (inventorySlots.Length / 2) - 1; i++)
-    {
-      if (isFull[i] == false)
-      {
-        AddWorms(Random.Range(35,35));
-      }
-    }
-    
+    isFull = new bool[14];
+    slotItemQuantity=new int[14];
   }
 
   public void AddToBag(int Id) //Type AddtoBag and Give a fish ID, Will Automatically be tossed into the Inventory
   {
     slotIdSelected = -1;
-    for (int i = 0; i < inventorySlots.Length - 1; i++)
+    int startVal = 0;
+    if(Id >= 10)
+    {
+      startVal = 10;
+    }
+    for (int i = startVal; i < inventorySlots.Length - 1; i++)
     {
       if (isFull[i]==false)
       {
@@ -58,21 +58,40 @@ public class InventoryTab : UdonSharpBehaviour
         //Say the Slot is Full
         isFull[i] = true;
         //Change Slot Color to Rarity
-        if(fishDictionary.getFishData(FishId[i]).getFishRarity()==0)
+
+        if(startVal == 10)
         {
-          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[0];
+          if(fishDictionary.getFishData(FishId[i]).getFishRarity() == 0)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = FishSlotRarities[0];
+          } 
+          else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 1)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = FishSlotRarities[1];
+          }
+          else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 2)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = FishSlotRarities[2];
+          }
         }
-        else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 1)
+        else
         {
-          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[2];
-        }
-        else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 2)
-        {
-          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[3];
-        }
-        else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 3)
-        {
-          inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[4];
+          if(fishDictionary.getFishData(FishId[i]).getFishRarity()==0)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[0];
+          }
+          else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 1)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[2];
+          }
+          else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 2)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[3];
+          }
+          else if (fishDictionary.getFishData(FishId[i]).getFishRarity() == 3)
+          {
+            inventorySlots[i].GetComponent<Image>().sprite = SlotRarities[4];
+          }
         }
         break;
       }
@@ -80,17 +99,35 @@ public class InventoryTab : UdonSharpBehaviour
     }
   }
 
-  public void AddWorms(int Id) //Type AddtoWorms and Give a fish ID, Will Automatically be tossed into the Inventory tab 2
+  public void AddWorms(int Id, int quantity) //Type AddtoWorms and Give a fish ID, Will Automatically be tossed into the Inventory tab 2
   {
-    if(Tab==1)
+    // check for if any slot has the worm type in it already
+    for (int i = 10; i < inventorySlots.Length - 1; i++)
     {
-      for (int i = 0; i < inventorySlots.Length - 1; i++)
+      if (FishId[i] == Id && slotItemQuantity[i] < 10)
+      {
+        slotItemQuantity[i] += quantity;
+        GameObject Child = inventorySlots[i].transform.GetChild(1).gameObject;
+        Child.GetComponent<TMPro.TextMeshProUGUI>().text = slotItemQuantity[i].ToString();
+        if(slotItemQuantity[i] <= 0)
+        {
+          RemoveItem(i);
+        }
+        return;
+      }
+    }
+    if(!(quantity < 1))
+    {
+      // then check for empty slots
+      for (int i = 10; i < inventorySlots.Length - 1; i++)
       {
         if (isFull[i] == false)
         {
-          slotItemQuantity[i] = 10;
+          slotItemQuantity[i] += quantity;
           AddToBag(Id);
-          break;
+          GameObject Child = inventorySlots[i].transform.GetChild(1).gameObject;
+          Child.GetComponent<TMPro.TextMeshProUGUI>().text = slotItemQuantity[i].ToString();
+          return;
         }
       }
     }
@@ -110,6 +147,10 @@ public class InventoryTab : UdonSharpBehaviour
           GameObject fishWorldObject = fishPool.AcquireGameObjectWithTag(""+Networking.LocalPlayer.playerId);
           if (fishWorldObject != null)
           {
+            if(!fishWorldObject.transform.GetChild(0).GetComponent<FishWorldObject>().GetPickedUp())
+            {
+              fishWorldObject.transform.GetChild(0).GetComponent<FishWorldObject>().OnDrop();
+            }
             fishWorldObject.GetComponent<FishWorldObjectContainer>().EXUR_Reinitialize();
           }
           else
@@ -118,7 +159,7 @@ public class InventoryTab : UdonSharpBehaviour
             fishWorldObject = fishPool.AcquireGameObjectWithTag("" + Networking.LocalPlayer.playerId);
           }
           fishWorldObject.GetComponentInChildren<FishWorldObject>().SetObjectById(FishId[i]);
-          fishWorldObject.transform.GetChild(0).position = gameObject.transform.position;
+          fishWorldObject.transform.GetChild(0).position = gameObject.transform.position - gameObject.transform.forward * 0.1f;
           fishWorldObject.transform.GetChild(0).rotation = gameObject.transform.rotation;
           RemoveItem(i);
           return;
@@ -136,7 +177,7 @@ public class InventoryTab : UdonSharpBehaviour
   public void RemoveItem(int slot) //Type Remove and Give a the slot you want to clear
   {
     //If on Tab 1 (Inventory Tab)
-    if(transform.parent.GetComponent<FIshingPDA>().currentTab==0)
+    if(slot < 10)
     {
       inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
       isFull[slot] = false;    //Show that the slot is now Open
@@ -144,24 +185,32 @@ public class InventoryTab : UdonSharpBehaviour
       GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
       Child.GetComponent<Image>().sprite = emptySlot;
     }
-    else if(transform.parent.GetComponent<FIshingPDA>().currentTab == 1) //If on Tab 2 (Worm Tab
+    else if(slot >= 10) //If on Tab 2 (Worm Tab
     {
       if(slotItemQuantity[slot]>0)
       {
-        slotItemQuantity[slot] -= 1;
+        slotItemQuantity[slot]--;
         GameObject Child = inventorySlots[slot].transform.GetChild(1).gameObject;
         Child.GetComponent<TMPro.TextMeshProUGUI>().text = slotItemQuantity[slot].ToString();
+        if(slotItemQuantity[slot] == 0)
+        {
+          inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
+          isFull[slot] = false;    //Show that the slot is now Open
+          FishId[slot] = 0;     //Make slot data our Empty Slot
+          GameObject Child2 = inventorySlots[slot].transform.GetChild(0).gameObject;
+          Child2.GetComponent<Image>().sprite = emptySlot;
+          inventorySlots[slot].GetComponent<Image>().sprite = emptyBaitSlot;
+        }
       }
       else
       {
-        inventorySlots[slot].GetComponent<Image>().sprite = SlotRarities[0];     //Change Slot Back to Grey
+        inventorySlots[slot].GetComponent<Image>().sprite = emptyBaitSlot;   //Change Slot Back to Grey
         isFull[slot] = false;    //Show that the slot is now Open
         FishId[slot] = 0;     //Make slot data our Empty Slot
         GameObject Child = inventorySlots[slot].transform.GetChild(0).gameObject;
         Child.GetComponent<Image>().sprite = emptySlot;
       }
     }
-
   }
 
   public void AddMoney(int id)

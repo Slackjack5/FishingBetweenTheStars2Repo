@@ -6,9 +6,9 @@ using VRC.Udon;
 
 public class InventorySlot : UdonSharpBehaviour
 {
+  public InventoryTab inventoryTab;
  public void selected()
   {
-    GameObject temp = gameObject.transform.parent.gameObject;
-    temp.GetComponent<InventoryTab>().slotObjectSelected = gameObject;
+    inventoryTab.slotObjectSelected = gameObject;
   }
 }
