@@ -12,7 +12,7 @@ public class BuyingPanelController : UdonSharpBehaviour
     {
         if(player.GetCash() >= 5)
         {
-            inventory.AddWorms(35, 1);
+            inventory.AddWorms(34, 1);
             player.ChangeCash(-5);
         }
     }
@@ -21,7 +21,7 @@ public class BuyingPanelController : UdonSharpBehaviour
     {
         if(player.GetCash() >= 35)
         {
-            inventory.AddWorms(36, 1);
+            inventory.AddWorms(35, 1);
             player.ChangeCash(-35);
         }
     }
@@ -30,7 +30,7 @@ public class BuyingPanelController : UdonSharpBehaviour
     {
         if(player.GetCash() >= 75)
         {
-            inventory.AddWorms(37, 1);
+            inventory.AddWorms(36, 1);
             player.ChangeCash(-75);
         }
     }

@@ -12,7 +12,7 @@ public class FishDictionary : UdonSharpBehaviour
   public GameObject fishTemplate;
   void Start()
   {
-    WORM_OFFSET = 35;
+    WORM_OFFSET = 34;
     FishArray = new FishData[38];
     BuildFishDictionary();
   }
@@ -31,12 +31,12 @@ public class FishDictionary : UdonSharpBehaviour
     }
     //Location A (Different Locations have different pools of fish)
 
-   FishArray[0].SetFishData(0, spriteArray[0], "Empty Slot", "Catch More Fish to Fill Your Bag!", 5, 10, 0, .2f, 0, 9999, 0, 0.5f);
+   FishArray[0].SetFishData(-1, spriteArray[0], "Empty Slot", "Catch More Fish to Fill Your Bag!", 5, 10, 0, .2f, 0, 9999, 0, 0.5f);
    //Tier 0 (ID , Name, Description, Rarity, Tier, Value, Base Chance, Power, Favorite Fish)
-   FishArray[1].SetFishData(0,spriteArray[1],"Action Figure", "Very Pog Pepe Action Figure",1, 0, 75, .2f, 0,9999, 0, 0.5f);
+   FishArray[1].SetFishData(0,spriteArray[1],"Action Figure", "Very Pog Pepe Action Figure",1, 0, 75, .25f, 0,9999, 0, 0.5f);
    FishArray[2].SetFishData(1,spriteArray[2], "Tin Can", "Wow! They really have it! Canned Bread!", 0, 0, 50, .25f, 0, 9999, 0, 0.5f);
    FishArray[3].SetFishData(2,spriteArray[3], "Squeaky Boots", "Who knew fish had such great taste in fashion?!", 0, 0, 50, .5f, 0, 9999, 0, 0.5f);
-   FishArray[4].SetFishData(3,spriteArray[4], "Worm Bundle", "A Bundle of 3 Worms", 1, 10, 0, .2f, 0, 9999, 0, 0.5f); // don't spawn this one atm, change probability of squeaky boots back when this is reimplemented
+   FishArray[4].SetFishData(3,spriteArray[4], "Worm Bundle", "A Bundle of 3 Worms", 1, 10, 0, 0, 0, 9999, 0, 0.5f); // don't spawn this one atm, change probability of squeaky boots back when this is reimplemented
    FishArray[5].SetFishData(4,spriteArray[5], "Wooden Crate", "A crate found in poor condition. Holds various trinkets that are worth a pretty penny!", 3, 0, 200, .05f, 0, 9999, 0, 0.5f);
     
    //Tier 1 (ID , Name, Description, Rarity, Tier, Value, Base Chance, Power, Favorite Fish)
@@ -81,14 +81,14 @@ public class FishDictionary : UdonSharpBehaviour
    FishArray[34].SetFishData(33, spriteArray[34], "Void Crate", "A crate with treasure beyond ones comprehension", 3, 5, 10000, .05f, 0, 9999, 0, 0.5f);
 
     //Tier 11 - Bait(ID , Name, Description, Rarity, Tier, Value, Base Chance, Power, Favorite Fish)
-    FishArray[35].SetFishData(35, spriteArray[35], "Regular Worms", "When put on Rod, Gives Power", 0, 11, 0, .2f, 50, 9999, 0, 0.5f);
-    FishArray[36].SetFishData(36, spriteArray[34], "Cosmic Worms", "When put on Rod, Gives Power", 1, 11, 0, .25f, 100, 9999, 0, 0.5f);
-    FishArray[37].SetFishData(37, spriteArray[36], "Void Star Fish", "When put on Rod, Gives Power", 2, 11, 0, .3f, 175, 9999, 0, 0.5f);
+    FishArray[35].SetFishData(34, spriteArray[35], "Regular Worms", "When put on Rod, Gives Power", 0, 11, 0, .2f, 50, 9999, 0, 0.5f);
+    FishArray[36].SetFishData(35, spriteArray[34], "Cosmic Worms", "When put on Rod, Gives Power", 1, 11, 0, .25f, 100, 9999, 0, 0.5f);
+    FishArray[37].SetFishData(36, spriteArray[36], "Void Star Fish", "When put on Rod, Gives Power", 2, 11, 0, .3f, 175, 9999, 0, 0.5f);
   }
 
   public FishData getFishData(int ID)
   {
-    return FishArray[ID];
+    return FishArray[ID + 1];
   }
 
   public FishData rollFish(int fishTier)

@@ -4,7 +4,7 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-public class FIshingPDA : UdonSharpBehaviour
+public class FishingPDA : UdonSharpBehaviour
 {
   private VRCPlayerApi localPlayer;
   public GameObject headOrb;

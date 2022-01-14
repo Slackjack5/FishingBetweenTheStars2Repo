@@ -8,6 +8,7 @@ public class FishWorldObject : UdonSharpBehaviour
 {
     public FishDictionary dictionary;
     public InventoryTab inventory;
+    public PlayerController player;
     private FishData fishData;
     private bool usedAsBait;
     private bool usedAsCash;
@@ -80,7 +81,7 @@ public class FishWorldObject : UdonSharpBehaviour
         }
         else if (usedAsCash)
         {
-            inventory.AddMoney(spriteId);
+            player.ChangeCash(dictionary.getFishData(spriteId).getFishValue());
             if(spriteId >= dictionary.WORM_OFFSET)
             {
                 transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
