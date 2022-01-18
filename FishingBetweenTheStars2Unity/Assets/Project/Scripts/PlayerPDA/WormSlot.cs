@@ -6,21 +6,16 @@ using VRC.Udon;
 using UnityEngine.UI;
 using TMPro;
 
+[DefaultExecutionOrder(4)]
 public class WormSlot : UdonSharpBehaviour
 {
     [Header("Required GameObjects")]
     public InventoryTab inventoryTab;
     public FishDictionary fishDictionary;
     public Sprite[] slotRarities;
-    private int wormId;
-    private int quantity;
+    private int wormId = -1;
+    private int quantity = 0;
     private const int MAX_WORMS_PER_SLOT = 10;
-
-    void Start()
-    {
-        wormId = -1;
-        quantity = 0;
-    }
 
     // if the slot has worms in it already, or the id is invalid, then return false. otherwise return true
     public bool ChangeWorms(int newWorms, int id)

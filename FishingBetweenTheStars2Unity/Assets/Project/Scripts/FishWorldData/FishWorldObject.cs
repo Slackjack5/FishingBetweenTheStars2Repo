@@ -71,12 +71,12 @@ public class FishWorldObject : UdonSharpBehaviour
             if(spriteId >= dictionary.WORM_OFFSET)
             {
                 inventory.AddWorms(spriteId, 1);
-                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+                transform.parent.GetComponent<Handler>().ReleaseObject();
             }
             else
             {
                 inventory.AddToBag(spriteId);
-                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+                transform.parent.GetComponent<Handler>().ReleaseObject();
             }
         }
         else if (usedAsCash)
@@ -84,18 +84,18 @@ public class FishWorldObject : UdonSharpBehaviour
             player.ChangeCash(dictionary.getFishData(spriteId).getFishValue());
             if(spriteId >= dictionary.WORM_OFFSET)
             {
-                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+                transform.parent.GetComponent<Handler>().ReleaseObject();
                 usedAsCash = false;
             }
             else
             {
-                transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+                transform.parent.GetComponent<Handler>().ReleaseObject();
                 usedAsCash = false;
             }
         }
         else
         {
-          transform.parent.GetComponent<FishWorldObjectContainer>().EXUR_Finalize();
+          transform.parent.GetComponent<Handler>().ReleaseObject();
         }
 
 

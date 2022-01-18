@@ -6,6 +6,7 @@ using VRC.Udon;
 using UnityEngine.UI;
 using TMPro;
 
+[DefaultExecutionOrder(3)]
 public class InventoryTab : UdonSharpBehaviour
 {
   [Header("Inventory slot GameObjects")]
@@ -18,6 +19,12 @@ public class InventoryTab : UdonSharpBehaviour
   public Sprite unknownFish;
   public Manager fishPool; // pool of fish to spawn in when items removed from inventory to put on hook
   private GameObject slotObjectSelected;
+  private int currentFishIdInWorld; // for fishworld object
+
+  public int GetFishIdInWorld()
+  {
+    return currentFishIdInWorld;
+  }
 
   void Start()
   {
@@ -50,24 +57,8 @@ public class InventoryTab : UdonSharpBehaviour
 
   private void SpawnFishObject(int id)
   {
-    // spawn fish object
-    GameObject fishWorldObject = fishPool.AcquireGameObjectWithTag(""+Networking.LocalPlayer.playerId);
-    if (fishWorldObject != null)
-    {
-      if(!fishWorldObject.transform.GetChild(0).GetComponent<FishWorldObject>().GetPickedUp())
-      {
-        fishWorldObject.transform.GetChild(0).GetComponent<FishWorldObject>().OnDrop();
-      }
-      fishWorldObject.GetComponent<FishWorldObjectContainer>().EXUR_Reinitialize();
-    }
-    else
-    {
-      fishPool.AcquireObjectForEachPlayer();
-      fishWorldObject = fishPool.AcquireGameObjectWithTag("" + Networking.LocalPlayer.playerId);
-    }
-    fishWorldObject.GetComponentInChildren<FishWorldObject>().SetObjectById(id);
-    fishWorldObject.transform.GetChild(0).position = gameObject.transform.position - gameObject.transform.forward * 0.1f;
-    fishWorldObject.transform.GetChild(0).rotation = gameObject.transform.rotation;
+    currentFishIdInWorld = id;
+    fishPool.AcquireObjectForEachPlayer();
   }
 
   public void FishItemSelected(FishSlot selected)

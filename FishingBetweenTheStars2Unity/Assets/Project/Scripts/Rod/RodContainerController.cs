@@ -11,6 +11,7 @@ public class RodContainerController : UdonSharpBehaviour
     public VRC_Pickup rodPickup;
     public LineController lineController;
     public FishingGameController fishingGameController;
+    public RodSpawnerController rodSpawnerController;
     [UdonSynced] private bool isActive;
     [UdonSynced] string EXUR_Tag;
     [UdonSynced] int EXUR_LastUsedTime;
@@ -53,6 +54,8 @@ public class RodContainerController : UdonSharpBehaviour
         SetRodActive(true);
         leverHandlePickup.pickupable = true;
         rodPickup.pickupable = true;
+        transform.GetChild(0).position = rodSpawnerController.gameObject.transform.position;//Networking.LocalPlayer.GetBonePosition(HumanBodyBones.Hips);
+        transform.GetChild(0).rotation = rodSpawnerController.gameObject.transform.rotation; //Networking.LocalPlayer.GetBoneRotation(HumanBodyBones.Hips);
     }
     public void EXUR_Finalize()
     {

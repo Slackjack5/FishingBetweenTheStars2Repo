@@ -5,19 +5,15 @@ using VRC.SDKBase;
 using VRC.Udon;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(4)]
 public class FishSlot : UdonSharpBehaviour
 {
     [Header("Required GameObjects")]
     public InventoryTab inventoryTab;
     public FishDictionary fishDictionary;
     public Sprite[] slotRarities;
-    private int fishId;
-    private bool isFull;
-    void Start()
-    {
-        fishId = -1;
-        isFull = false;
-    }
+    private int fishId = -1;
+    private bool isFull = false;
     public bool SetFish(int id)
     {
         if(id < 0)
